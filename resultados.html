@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOSPISOFT - Resultados de Laboratorio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #1f2937;
+        }
+
+        .navbar-brand h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.15);
+            border-radius: 8px;
+        }
+
+        .nav-link.active {
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 8px;
+        }
+
+        h2 {
+            font-weight: 700;
+            color: #1565c0;
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        h2::after {
+            content: "";
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #1e88e5, #2ecc71);
+            margin-top: 8px;
+            border-radius: 3px;
+        }
+
+        .btn-primary {
+            background-color: #1565c0;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 24px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #0d47a1;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background-color: #2ecc71;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 24px;
+            font-weight: 500;
+        }
+
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+
+        .btn-outline-success {
+            border-color: #2ecc71;
+            color: #2ecc71;
+        }
+
+        .btn-outline-success:hover {
+            background-color: #2ecc71;
+            border-color: #2ecc71;
+            color: white;
+        }
+
+        .btn-close-preview {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #ddd;
+        }
+
+        .btn-close-preview:hover {
+            background-color: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1) !important;
+        }
+
+        .badge-status {
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-pendiente {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .badge-completado {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .badge-revision {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .badge-error {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #e3f2fd;
+            cursor: pointer;
+        }
+
+        footer {
+            background: linear-gradient(135deg, #0b2b5c, #1565c0);
+            margin-top: auto;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 4px solid #1565c0;
+            position: relative;
+        }
+
+        .form-section h4 {
+            color: #1565c0;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .vista-previa-container {
+            position: relative;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navegación con el código solicitado -->
+    <nav class="navbar navbar-expand-xl navbar-dark bg-primary shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand titulo-navbar" href="#"><h1>Resultado</h1></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="index.html">Inicio</Home></a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="registro_paciente.html">Registro Paciente</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="agendamientoDeCitas.html">Agendamiento de Citas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="confirmacionDeCitas.html">citas programadas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="Medico.html">Medicos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="laboratorio.html">laboratorio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="resultados.html">resultados</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search" onsubmit="event.preventDefault(); buscarPaciente();">
+                    <input class="form-control me-2" type="search" id="searchGlobal" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-5">
+        <!-- Encabezado -->
+        <div class="text-center mb-5">
+            <h2><i class="bi bi-file-text-fill me-2"></i>Gestión de Resultados de Laboratorio</h2>
+        </div>
+
+        <!-- ==================== RF06: REGISTRO DE RESULTADOS DE LABORATORIO ==================== -->
+        <div class="form-section position-relative">
+            <h4><i class="bi bi-cloud-upload me-2" style="color: #2ecc71;"></i>Registrar Resultados de Exámenes Médicos</h4>
+            <p class="text-muted small mb-3">Como personal del laboratorio, necesito registrar los resultados para que estén disponibles y asociados al paciente correcto.</p>
+            
+            <form id="formRegistroResultado" onsubmit="event.preventDefault(); registrarResultado();">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Documento Paciente *</label>
+                        <input type="text" class="form-control" id="docPaciente" required placeholder="Ej: 12345678">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Nombre Paciente *</label>
+                        <input type="text" class="form-control" id="nombrePaciente" required placeholder="Nombre completo">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Examen Médico *</label>
+                        <select class="form-select" id="tipoExamen" required>
+                            <option value="">Seleccionar...</option>
+                            <option>Hemograma completo</option>
+                            <option>Glicemia</option>
+                            <option>Perfil lipídico</option>
+                            <option>Radiografía de tórax</option>
+                            <option>Ecografía abdominal</option>
+                            <option>Prueba de esfuerzo</option>
+                            <option>Biometría hemática</option>
+                            <option>Examen de orina</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Fecha Resultado *</label>
+                        <input type="date" class="form-control" id="fechaResultado" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Resultados / Valores del Examen</label>
+                        <textarea class="form-control" id="valoresExamen" rows="3" placeholder="Ej: Hemoglobina: 14.2 g/dL, Glucosa: 95 mg/dL, Colesterol total: 180 mg/dL..."></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Archivo PDF (opcional)</label>
+                        <input type="file" class="form-control" id="archivoPDF" accept=".pdf">
+                        <small class="text-muted">Puede adjuntar el resultado en formato PDF</small>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-success rounded-pill px-4">
+                            <i class="bi bi-save me-2"></i>Registrar Resultado
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4 ms-2" onclick="limpiarFormularioResultado()">
+                            <i class="bi bi-eraser me-2"></i>Limpiar
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Lista de Resultados Pendientes de Validación -->
+        <div class="form-section position-relative">
+            <h4><i class="bi bi-hourglass-split me-2" style="color: #f39c12;"></i>Resultados Pendientes de Validación</h4>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Paciente</th>
+                            <th>Documento</th>
+                            <th>Examen</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pendientesBody">
+                        <tr><td colspan="6" class="text-center text-muted">No hay resultados pendientes</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ==================== RF07: VALIDACIÓN AUTOMÁTICA DE RESULTADOS ==================== -->
+        <div class="form-section position-relative">
+            <h4><i class="bi bi-shield-check me-2" style="color: #3498db;"></i>Validación Automática de Resultados</h4>
+            <p class="text-muted small mb-3">El sistema valida automáticamente que los resultados estén completos y sin errores antes de ser revisados por el médico.</p>
+            
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card bg-light border-0">
+                        <div class="card-body">
+                            <h6><i class="bi bi-check-circle-fill text-success me-2"></i>Resultados Validados (Completos)</h6>
+                            <div class="table-responsive mt-2">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr><th>Paciente</th><th>Examen</th><th>Validado por</th><th>Estado</th></tr>
+                                    </thead>
+                                    <tbody id="validadosBody">
+                                        <tr><td colspan="4" class="text-muted">No hay resultados validados</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card bg-light border-0">
+                        <div class="card-body">
+                            <h6><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Resultados Rechazados (Incompletos)</h6>
+                            <div class="table-responsive mt-2">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr><th>Paciente</th><th>Motivo de rechazo</th><th>Acción</th></tr>
+                                    </thead>
+                                    <tbody id="rechazadosBody">
+                                        <tr><td colspan="3" class="text-muted">No hay resultados rechazados</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== RF09: ENTREGA DE RESULTADOS ==================== -->
+        <div class="form-section position-relative">
+            <h4><i class="bi bi-envelope-paper me-2" style="color: #2ecc71;"></i>Entrega de Resultados al Paciente</h4>
+            <p class="text-muted small mb-3">Como recepcionista, necesito generar un resumen de resultados y diagnóstico final en formato digital o impreso.</p>
+            
+            <form id="formEntregaResultados" onsubmit="event.preventDefault(); generarEntregaResultados();">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Documento del Paciente</label>
+                        <input type="text" class="form-control" id="entregaDocumento" required placeholder="Ingrese documento">
+                        <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="cargarDatosPaciente()">
+                            <i class="bi bi-search"></i> Cargar datos del paciente
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Paciente</label>
+                        <input type="text" class="form-control" id="entregaNombre" readonly placeholder="Nombre se cargará automáticamente">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Formato de Entrega</label>
+                        <select class="form-select" id="formatoEntrega" required>
+                            <option value="digital">Digital (PDF / Correo electrónico)</option>
+                            <option value="impreso">Impreso (Formato físico)</option>
+                            <option value="ambos">Ambos formatos</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="correoEntrega" placeholder="paciente@email.com">
+                        <small class="text-muted">Requerido si selecciona formato digital</small>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Diagnóstico Final</label>
+                        <textarea class="form-control" id="diagnosticoFinal" rows="2" placeholder="Diagnóstico basado en los resultados..."></textarea>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="incluirResultados">
+                            <label class="form-check-label">Incluir resultados completos de laboratorio en el resumen</label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary rounded-pill px-4">
+                            <i class="bi bi-file-pdf-fill me-2"></i>Generar Resumen y Entregar
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4 ms-2" onclick="previsualizarResumen()">
+                            <i class="bi bi-eye me-2"></i>Previsualizar
+                        </button>
+                    </div>
+                </div>
+            </form>
+            
+            <!-- Vista previa del resumen con botón cerrar -->
+            <div id="vistaPrevia" class="vista-previa-container d-none">
+                <div class="card border-success position-relative">
+                    <div class="btn-close-preview" onclick="cerrarPrevisualizacion()">
+                        <i class="bi bi-x-lg"></i>
+                    </div>
+                    <div class="card-header bg-success text-white">
+                        <i class="bi bi-file-text-fill me-2"></i>Resumen de Resultados - Previsualización
+                    </div>
+                    <div class="card-body" id="vistaPreviaContenido">
+                        <!-- Contenido dinámico -->
+                    </div>
+                    <div class="card-footer text-muted">
+                        <i class="bi bi-printer me-2"></i>Listo para imprimir o enviar por correo
+                    </div>
+                </div>
+            </div>
+            
+            <div id="mensajeEntrega" class="alert mt-3 d-none"></div>
+        </div>
+<!-- Modal para confirmación -->
+    <div class="modal fade" id="confirmacionModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="bi bi-check-circle-fill me-2"></i>Resultado Validado</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modalMensaje"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary rounded-pill" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <footer class="text-white text-center py-3 mt-4">
+        <div class="container">
+            <p class="mb-0">© 2026 Sistema de Gestión Hospitalaria | Proyecto Académico (HOSPISOFT) - SENA</p>
+            <small><i class="bi bi-shield-lock"></i> Registro de resultados | Validación automática | Entrega de resultados</small>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Estructura de datos - SIN DATOS PREDETERMINADOS
+        let resultadosPendientes = [];
+        let resultadosValidados = [];
+        let resultadosRechazados = [];
+        let entregasRealizadas = [];
+        let nextId = 1;
+        
+        // Función para registrar resultado (RF06)
+        function registrarResultado() {
+            const documento = document.getElementById('docPaciente').value;
+            const nombre = document.getElementById('nombrePaciente').value;
+            const examen = document.getElementById('tipoExamen').value;
+            const fecha = document.getElementById('fechaResultado').value;
+            const valores = document.getElementById('valoresExamen').value;
+            
+            // Validación de campos obligatorios
+            if(!documento || !nombre || !examen || !fecha) {
+                alert('❌ Error: Debe completar todos los campos obligatorios (Documento, Nombre, Examen, Fecha)');
+                return;
+            }
+            
+            // Verificar si los valores del examen están completos
+            const tieneValores = valores && valores.trim() !== '';
+            
+            const nuevoResultado = {
+                id: nextId++,
+                documento: documento,
+                nombre: nombre,
+                examen: examen,
+                fecha: fecha,
+                valores: valores || 'Sin valores registrados'
+            };
+            
+            // Validación automática según si hay valores completos
+            if(tieneValores) {
+                // Si tiene valores completos, va directamente a validados
+                resultadosValidados.push({
+                    id: nuevoResultado.id,
+                    documento: documento,
+                    nombre: nombre,
+                    examen: examen,
+                    fecha: fecha,
+                    valores: valores,
+                    validadoPor: 'Sistema - Validación automática'
+                });
+                mostrarModal('✅ Validación automática exitosa', 'El resultado ha sido validado automáticamente porque los valores del examen están completos. Ya está disponible para que el médico lo revise.');
+            } else {
+                // Si faltan valores, va a pendientes de validación
+                resultadosPendientes.push(nuevoResultado);
+                mostrarModal('📋 Resultado registrado', 'El resultado ha sido registrado pero está PENDIENTE DE VALIDACIÓN porque faltan los valores del examen. Complete los valores para que pase la validación automática.');
+            }
+            
+            limpiarFormularioResultado();
+            renderizarTodo();
+        }
+        
+        // RF09: Generar entrega de resultados
+        function generarEntregaResultados() {
+            const documento = document.getElementById('entregaDocumento').value;
+            const formato = document.getElementById('formatoEntrega').value;
+            const correo = document.getElementById('correoEntrega').value;
+            const diagnostico = document.getElementById('diagnosticoFinal').value;
+            const incluirResultados = document.getElementById('incluirResultados').checked;
+            
+            if(!documento) {
+                alert('Por favor ingrese el documento del paciente');
+                return;
+            }
+            
+            if(formato === 'digital' && !correo) {
+                alert('Para entrega en formato digital, debe proporcionar un correo electrónico');
+                return;
+            }
+            
+            // Buscar resultados del paciente
+            const resultadosPaciente = [...resultadosValidados, ...resultadosPendientes].filter(r => r.documento === documento);
+            const paciente = resultadosPaciente[0];
+            
+            if(!paciente && !document.getElementById('entregaNombre').value) {
+                alert('No se encontraron resultados para este paciente. Primero registre los resultados.');
+                return;
+            }
+            
+            const nombrePaciente = document.getElementById('entregaNombre').value || paciente?.nombre || 'Paciente';
+            
+            // Crear registro de entrega
+            const nuevaEntrega = {
+                id: Date.now(),
+                fecha: new Date().toISOString().split('T')[0],
+                paciente: nombrePaciente,
+                documento: documento,
+                formato: formato === 'digital' ? 'Digital (PDF)' : formato === 'impreso' ? 'Impreso físico' : 'Ambos formatos',
+                estado: 'Entregado',
+                diagnostico: diagnostico || 'Sin diagnóstico registrado'
+            };
+            
+            entregasRealizadas.unshift(nuevaEntrega);
+            renderizarHistorialEntregas();
+            
+            // Mensaje de éxito
+            let mensaje = `✅ ${formato === 'digital' ? 'RESUMEN DIGITAL GENERADO' : formato === 'impreso' ? 'RESUMEN IMPRESO' : 'AMBOS FORMATOS GENERADOS'}\n\n`;
+            mensaje += `Paciente: ${nombrePaciente}\n`;
+            mensaje += `Documento: ${documento}\n`;
+            if(formato === 'digital' || formato === 'ambos') mensaje += `Enviado a: ${correo}\n`;
+            mensaje += `Diagnóstico: ${diagnostico || 'No especificado'}\n`;
+            if(incluirResultados && resultadosPaciente.length > 0) {
+                mensaje += `\nResultados incluidos:\n`;
+                resultadosPaciente.forEach(r => {
+                    mensaje += `- ${r.examen}: ${r.valores || 'Valores disponibles en el PDF'}\n`;
+                });
+            }
+            mensaje += `\n📄 Documento PDF generado exitosamente.`;
+            
+            const alertDiv = document.getElementById('mensajeEntrega');
+            alertDiv.className = 'alert alert-success mt-3';
+            alertDiv.innerHTML = `<i class="bi bi-check-circle-fill me-2"></i>${mensaje.replace(/\n/g, '<br>')}`;
+            alertDiv.classList.remove('d-none');
+            
+            setTimeout(() => {
+                alertDiv.classList.add('d-none');
+            }, 8000);
+            
+            // Limpiar campos
+            document.getElementById('entregaDocumento').value = '';
+            document.getElementById('entregaNombre').value = '';
+            document.getElementById('correoEntrega').value = '';
+            document.getElementById('diagnosticoFinal').value = '';
+            document.getElementById('incluirResultados').checked = false;
+        }
+        
+        function cargarDatosPaciente() {
+            const documento = document.getElementById('entregaDocumento').value;
+            const todosResultados = [...resultadosValidados, ...resultadosPendientes];
+            const paciente = todosResultados.find(r => r.documento === documento);
+            
+            if(paciente) {
+                document.getElementById('entregaNombre').value = paciente.nombre;
+                if(!document.getElementById('diagnosticoFinal').value) {
+                    document.getElementById('diagnosticoFinal').placeholder = `Ej: Resultados de ${paciente.examen} - Pendiente de interpretación médica`;
+                }
+            } else {
+                alert('No se encontraron resultados para este documento. Registre primero los resultados.');
+            }
+        }
+        
+        function previsualizarResumen() {
+            const documento = document.getElementById('entregaDocumento').value;
+            const nombre = document.getElementById('entregaNombre').value;
+            const diagnostico = document.getElementById('diagnosticoFinal').value;
+            const incluirResultados = document.getElementById('incluirResultados').checked;
+            
+            if(!documento) {
+                alert('Ingrese documento del paciente primero');
+                return;
+            }
+            
+            const resultadosPaciente = [...resultadosValidados, ...resultadosPendientes].filter(r => r.documento === documento);
+            
+            let contenido = `<h6>Paciente: ${nombre || 'No especificado'}</h6>`;
+            contenido += `<p><strong>Documento:</strong> ${documento}</p>`;
+            contenido += `<p><strong>Diagnóstico Final:</strong> ${diagnostico || 'Pendiente de actualización'}</p>`;
+            
+            if(incluirResultados && resultadosPaciente.length > 0) {
+                contenido += `<hr><h6>Resultados de Laboratorio:</h6>`;
+                resultadosPaciente.forEach(r => {
+                    contenido += `<div class="mb-2"><strong>${r.examen} (${r.fecha}):</strong><br>${r.valores || 'Resultados disponibles en PDF adjunto'}</div>`;
+                });
+            } else if(incluirResultados && resultadosPaciente.length === 0) {
+                contenido += `<p class="text-warning">No hay resultados registrados para este paciente.</p>`;
+            }
+            
+            contenido += `<hr><small class="text-muted">Documento generado por HOSPISOFT - Sistema de Gestión Hospitalaria</small>`;
+            
+            document.getElementById('vistaPreviaContenido').innerHTML = contenido;
+            document.getElementById('vistaPrevia').classList.remove('d-none');
+            
+            setTimeout(() => {
+                document.getElementById('vistaPrevia').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+        
+        function cerrarPrevisualizacion() {
+            document.getElementById('vistaPrevia').classList.add('d-none');
+            document.getElementById('vistaPreviaContenido').innerHTML = '';
+        }
+        
+        function renderizarTodo() {
+            renderizarPendientes();
+            renderizarValidados();
+            renderizarRechazados();
+            renderizarHistorialEntregas();
+        }
+        
+        function renderizarPendientes() {
+            const tbody = document.getElementById('pendientesBody');
+            if(resultadosPendientes.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No hay resultados pendientes</td></tr>';
+                return;
+            }
+            tbody.innerHTML = '';
+            resultadosPendientes.forEach(r => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><i class="bi bi-person-circle me-2 text-primary"></i>${r.nombre}</td>
+                        <td>${r.documento}</td>
+                        <td>${r.examen}</td>
+                        <td>${r.fecha}</td>
+                        <td><span class="badge-status badge-pendiente">Pendiente</span></td>
+                        <td><button class="btn btn-sm btn-primary rounded-pill" onclick="completarValidacion(${r.id})"><i class="bi bi-pencil-square"></i> Completar valores</button></td>
+                    </tr>
+                `;
+            });
+        }
+        
+        function completarValidacion(id) {
+            const resultado = resultadosPendientes.find(r => r.id === id);
+            if(resultado) {
+                document.getElementById('docPaciente').value = resultado.documento;
+                document.getElementById('nombrePaciente').value = resultado.nombre;
+                document.getElementById('tipoExamen').value = resultado.examen;
+                document.getElementById('fechaResultado').value = resultado.fecha;
+                document.getElementById('valoresExamen').value = resultado.valores !== 'Sin valores registrados' ? resultado.valores : '';
+                
+                resultadosPendientes = resultadosPendientes.filter(r => r.id !== id);
+                renderizarTodo();
+                
+                document.getElementById('formRegistroResultado').scrollIntoView({ behavior: 'smooth' });
+                alert(`Complete los valores del examen para ${resultado.nombre} y presione "Registrar Resultado" nuevamente.`);
+            }
+        }
+        
+        function renderizarValidados() {
+            const tbody = document.getElementById('validadosBody');
+            if(resultadosValidados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-muted">No hay resultados validados</td></tr>';
+                return;
+            }
+            tbody.innerHTML = '';
+            resultadosValidados.forEach(r => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${r.nombre}<br><small class="text-muted">${r.examen}</small></td>
+                        <td>${r.fecha}</td>
+                        <td><span class="badge bg-success">${r.validadoPor}</span></td>
+                        <td><span class="badge badge-completado">Completo</span></td>
+                    </tr>
+                `;
+            });
+        }
+        
+        function renderizarRechazados() {
+            const tbody = document.getElementById('rechazadosBody');
+            if(resultadosRechazados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" class="text-muted">No hay resultados rechazados</td></tr>';
+                return;
+            }
+            tbody.innerHTML = '';
+            resultadosRechazados.forEach(r => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${r.nombre}<br><small>${r.examen}</small></td>
+                        <td><span class="badge bg-danger">${r.motivo}</span></td>
+                        <td><button class="btn btn-sm btn-outline-warning rounded-pill" onclick="reintentarRegistro(${r.id})">Reintentar</button></td>
+                    </tr>
+                `;
+            });
+        }
+        
+        function renderizarHistorialEntregas() {
+            const tbody = document.getElementById('historialEntregas');
+            if(entregasRealizadas.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No hay entregas registradas</td></tr>';
+                return;
+            }
+            tbody.innerHTML = '';
+            entregasRealizadas.forEach(e => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${e.fecha}</td>
+                        <td>${e.paciente}</td>
+                        <td>${e.documento}</td>
+                        <td>${e.formato}</td>
+                        <td><span class="badge bg-success">${e.estado}</span></td>
+                        <td><button class="btn btn-sm btn-info rounded-pill" onclick="imprimirYEliminar(${e.id}, '${e.paciente}', '${e.documento}')"><i class="bi bi-printer"></i> Imprimir</button></td>
+                    </tr>
+                `;
+            });
+        }
+        
+        function imprimirYEliminar(id, paciente, documento) {
+            alert(`🖨️ IMPRIMIENDO RESULTADOS\n\nPaciente: ${paciente}\nDocumento: ${documento}\n\nSe está generando el documento para impresión...`);
+            
+            entregasRealizadas = entregasRealizadas.filter(e => e.id !== id);
+            renderizarHistorialEntregas();
+            alert('✅ Registro eliminado del historial después de imprimir.');
+        }
+        
+        function reintentarRegistro(id) {
+            const resultado = resultadosRechazados.find(r => r.id === id);
+            if(resultado) {
+                document.getElementById('docPaciente').value = resultado.documento;
+                document.getElementById('nombrePaciente').value = resultado.nombre;
+                document.getElementById('tipoExamen').value = resultado.examen;
+                
+                resultadosRechazados = resultadosRechazados.filter(r => r.id !== id);
+                renderizarTodo();
+                
+                document.getElementById('formRegistroResultado').scrollIntoView({ behavior: 'smooth' });
+                alert(`Complete los valores del examen para ${resultado.nombre} y vuelva a registrar el resultado.`);
+            }
+        }
+        
+        function limpiarFormularioResultado() {
+            document.getElementById('docPaciente').value = '';
+            document.getElementById('nombrePaciente').value = '';
+            document.getElementById('tipoExamen').value = '';
+            document.getElementById('fechaResultado').value = '';
+            document.getElementById('valoresExamen').value = '';
+            document.getElementById('archivoPDF').value = '';
+        }
+        
+        function buscarPaciente() {
+            const termino = document.getElementById('searchGlobal').value.toLowerCase();
+            if(!termino) {
+                renderizarTodo();
+                return;
+            }
+            
+            const pendientesFiltrados = resultadosPendientes.filter(r => r.documento.includes(termino) || r.nombre.toLowerCase().includes(termino));
+            const validadosFiltrados = resultadosValidados.filter(r => r.documento.includes(termino) || r.nombre.toLowerCase().includes(termino));
+            
+            const pendientesBody = document.getElementById('pendientesBody');
+            if(pendientesFiltrados.length === 0 && validadosFiltrados.length === 0) {
+                pendientesBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No se encontraron resultados</td>;</tr>';
+            } else {
+                pendientesBody.innerHTML = '';
+                pendientesFiltrados.forEach(r => {
+                    pendientesBody.innerHTML += `
+                        <tr>
+                            <td><i class="bi bi-person-circle me-2 text-primary"></i>${r.nombre}</td>
+                            <td>${r.documento}</td>
+                            <td>${r.examen}</td>
+                            <td>${r.fecha}</td>
+                            <td><span class="badge-status badge-pendiente">Pendiente</span></td>
+                            <td><button class="btn btn-sm btn-primary rounded-pill" onclick="completarValidacion(${r.id})"><i class="bi bi-pencil-square"></i> Completar valores</button></td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+        
+        function mostrarModal(titulo, mensaje) {
+            document.getElementById('modalMensaje').innerHTML = `<strong>${titulo}</strong><br><br>${mensaje}`;
+            const modal = new bootstrap.Modal(document.getElementById('confirmacionModal'));
+            modal.show();
+        }
+        
+        renderizarTodo();
+    </script>
+</body>
+</html>

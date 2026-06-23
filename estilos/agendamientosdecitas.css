@@ -1,0 +1,39 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #1a1a1a;
+}
+
+h2 {
+    font-weight: 700;
+    color: #1565c0;
+}
+
+h5 {
+    font-weight: 600;
+    color: #0d47a1;
+}
+
+p {
+    color: #333333;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+h2::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: #1e88e5;
+    margin-top: 8px;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #1f2937; 
+}
+p {
+    font-size: 15px;
+    color: #374151; /* gris oscuro suave */
+    line-height: 1.6;
+}

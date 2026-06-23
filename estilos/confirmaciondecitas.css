@@ -1,0 +1,29 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #1f2937;
+    background-color: #f8f9fa;
+}
+
+.navbar-brand h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0;
+    font-weight: 700;
+}
+
+h2, h4 {
+    font-weight: 700;
+    color: #1565c0;
+}
+
+/* Estilo para la sección de confirmación */
+#seccionConfirmacion .card {
+    border: 2px solid #0d6efd;
+}
+
+footer {
+    margin-top: auto;
+}
+
+.d-none {
+    display: none !important;
+}

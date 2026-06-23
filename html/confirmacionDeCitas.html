@@ -9,38 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            color: #1f2937;
-            background-color: #f8f9fa;
-        }
-
-        .navbar-brand h1 {
-            font-size: 1.5rem;
-            margin-bottom: 0;
-            font-weight: 700;
-        }
-
-        h2, h4 {
-            font-weight: 700;
-            color: #1565c0;
-        }
-
-        /* Estilo para la sección de confirmación */
-        #seccionConfirmacion .card {
-            border: 2px solid #0d6efd;
-        }
-
-        footer {
-            margin-top: auto;
-        }
-
-        .d-none {
-            display: none !important;
-        }
-    </style>
+    <link rel="stylesheet" href="../estilos/confirmaciondecitas.css">
 </head>
 <body class="d-flex flex-column min-vh-100">
 
@@ -197,82 +166,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-    <script>
-        // Variables de estado
-        let pagoRealizado = false;
-        let datosCita = {};
-
-        // Inicializar Calendario
-        flatpickr("#fecha", {
-            minDate: "today",
-            dateFormat: "Y-m-d",
-            onChange: function(selectedDates, dateStr) {
-                cargarHorarios();
-            }
-        });
-
-        function cargarHorarios() {
-            const horas = ["08:00", "09:30", "11:00", "14:00", "15:30"];
-            const select = document.getElementById("hora");
-            select.innerHTML = '<option value="">Selecciona hora</option>';
-            horas.forEach(h => {
-                let opt = document.createElement("option");
-                opt.value = h;
-                opt.textContent = h;
-                select.appendChild(opt);
-            });
-        }
-
-        function simularPago() {
-            pagoRealizado = true;
-            document.getElementById("estadoPago").classList.remove("d-none");
-        }
-
-        // Manejo del Formulario
-        document.getElementById("formCita").addEventListener("submit", function(e) {
-            e.preventDefault();
-
-            if (!pagoRealizado) {
-                alert("Por favor, valide el pago antes de continuar.");
-                return;
-            }
-
-            // Capturar datos
-            datosCita = {
-                nombre: document.getElementById("nombre").value,
-                cedula: document.getElementById("cedula").value,
-                medico: document.getElementById("profesional").value,
-                servicio: document.getElementById("servicio").value,
-                fecha: document.getElementById("fecha").value,
-                hora: document.getElementById("hora").value
-            };
-
-            // Llenar vista de confirmación
-            document.getElementById("res-nombre").textContent = datosCita.nombre;
-            document.getElementById("res-cedula").textContent = datosCita.cedula;
-            document.getElementById("res-medico").textContent = datosCita.medico;
-            document.getElementById("res-servicio").textContent = datosCita.servicio;
-            document.getElementById("res-fecha").textContent = datosCita.fecha;
-            document.getElementById("res-hora").textContent = datosCita.hora;
-
-            // Intercambiar vistas
-            document.getElementById("contenedorFormulario").classList.add("d-none");
-            document.getElementById("seccionConfirmacion").classList.remove("d-none");
-        });
-
-        function finalizarProceso(accion) {
-            if (accion === 'Confirmar') {
-                const msj = `CITA CONFIRMADA - HOSPISOFT\nPaciente: ${datosCita.nombre}\nMédico: ${datosCita.medico}\nFecha: ${datosCita.fecha} ${datosCita.hora}`;
-                alert("Cita confirmada con éxito. Se enviará la notificación.");
-                // Aquí podrías usar window.open(`https://wa.me/TUNUMERO?text=${encodeURIComponent(msj)}`);
-                location.reload();
-            } else {
-                if(confirm("¿Seguro que desea cancelar? Se perderán los datos ingresados.")) {
-                    location.reload();
-                }
-            }
-        }
-    </script>
+    <script src="../JS/confirmaciondecitas.js"></script>
 </body>
 </html>

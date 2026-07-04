@@ -3,7 +3,7 @@ const roleText = document.getElementById("roleText");
 const roleIcon = document.getElementById("roleIcon");
 const loginButton = document.getElementById("loginButton");
 
-const inputUsuario = document.getElementById("Usuario")
+const inputCorreo = document.getElementById("correo")
 const inputContraseña = document.getElementById("contraseña")
 
 let currentRole = "";
@@ -26,9 +26,9 @@ loginButton.addEventListener("click", () => {
     }
 
     
-    if (inputUsuario.value.trim() === "") {
-        alert("El campo de usuario es obligatorio.");
-        inputUsuario.focus();
+    if (inputCorreo.value.trim() === "") {
+        alert("El campo de correo es obligatorio.");
+        inputCorreo.focus();
         return; 
     }
 
@@ -39,19 +39,57 @@ loginButton.addEventListener("click", () => {
         return; 
     }
 
-    if(currentRole === "recepcionista"){
-        window.location.href = "registro_paciente.html";
-    }
-    else if(currentRole === "medico"){
-        window.location.href = "Medico.html";
-    }
-    else if(currentRole === "laboratorio"){
-        window.location.href = "laboratorio.html";
-    }
-    else if(currentRole === "paciente"){
-        window.location.href = "confirmacionDeCitas.html";
-    }
-    else if(currentRole === "administrador"){
-        window.location.href = "index.html";
-    }
+    const datosLogin = {
+        correo: inputCorreo.value,
+        contraseña: inputContraseña.value
+    };
+
+    fetch("http://127.0.0.1:8000/auth/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(datosLogin)
+    })
+    .then(response => {
+
+        if (!response.ok) {
+            throw new Error("Credenciales incorrectas");
+        }
+
+        return response.json();
+
+    })
+    .then(data => {
+
+        console.log(data);
+
+        if (data.rol === "administrador") {
+            window.location.href = "index.html";
+        }
+
+        else if (data.rol === "recepcionista") {
+            window.location.href = "registro_paciente.html";
+        }
+
+        else if (data.rol === "medico") {
+            window.location.href = "Medico.html";
+        }
+
+        else if (data.rol === "laboratorio") {
+            window.location.href = "laboratorio.html";
+        }
+
+        else if (data.rol === "paciente") {
+            window.location.href = "confirmacionDeCitas.html";
+        }
+    
+
+    })
+    .catch(error => {
+
+        alert(error.message);
+
+    });
 });
+

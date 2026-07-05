@@ -62,29 +62,36 @@ loginButton.addEventListener("click", () => {
     })
     .then(data => {
 
+        console.log("Llego");
+
         console.log(data);
 
-        if (data.rol === "administrador") {
-            window.location.href = "index.html";
+        console.log(data.rol);
+
+        alert("ANTES DEL IF");
+
+        if (data.rol === "ADMINISTRADOR") {
+            alert("entro al administrador");
+            window.location.href = "/index";
         }
 
-        else if (data.rol === "recepcionista") {
-            window.location.href = "registro_paciente.html";
+        else if (data.rol === "RECEPCIONISTA") {
+            window.location.href = "/registro_paciente";
         }
 
-        else if (data.rol === "medico") {
-            window.location.href = "Medico.html";
+        else if (data.rol === "MEDICO") {
+            window.location.href = "/Medico";
         }
 
-        else if (data.rol === "laboratorio") {
-            window.location.href = "laboratorio.html";
+        else if (data.rol === "LABORATORIO") {
+            window.location.href = "/laboratorio";
         }
 
-        else if (data.rol === "paciente") {
-            window.location.href = "confirmacionDeCitas.html";
+        else if (data.rol === "PACIENTE") {
+            window.location.href = "/confirmacionDeCitas";
         }
     
-
+        alert("DESPUES DEL IF");
     })
     .catch(error => {
 

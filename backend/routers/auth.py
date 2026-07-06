@@ -12,12 +12,12 @@ router = APIRouter(
 @router.post("/login", response_model = LoginResponse)
 def login(datos: LoginRequest,db: Session = Depends(get_db)):
     
-    usuario = autenticar_usuario(db, datos.correo, datos.contraseña)
+    usuario = autenticar_usuario(db, datos.correo, datos.contraseña, datos.rol)
     
     if usuario is None:
         raise HTTPException(
             status_code = 404, 
-            detail = "Usuario o contraseña incorrectos"
+            detail = "El correo, la contraseña o el rol seleccionado son incorrectos."
         )
         
     return {

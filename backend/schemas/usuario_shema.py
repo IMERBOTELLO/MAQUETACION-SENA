@@ -12,12 +12,12 @@ class RolUsuario(str, Enum):
 class UsuarioCreate(BaseModel):
     correo: str
     contraseña: str
-    rol: RolUsuario
+    rol: str
     
 class UsuarioLogin(BaseModel):
     rol: RolUsuario
     correo: str
-    contraseña: str
+    contraseña: RolUsuario
     
 class UsuarioResponse(BaseModel):
     id_usuario: int
@@ -26,4 +26,3 @@ class UsuarioResponse(BaseModel):
 
     class Config:
         from_attributes = True
-    

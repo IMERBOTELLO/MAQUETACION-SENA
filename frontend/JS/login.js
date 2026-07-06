@@ -41,7 +41,8 @@ loginButton.addEventListener("click", () => {
 
     const datosLogin = {
         correo: inputCorreo.value,
-        contraseña: inputContraseña.value
+        contraseña: inputContraseña.value,
+        rol: currentRole.toUpperCase()
     };
 
     fetch("http://127.0.0.1:8000/auth/login", {
@@ -51,27 +52,21 @@ loginButton.addEventListener("click", () => {
         },
         body: JSON.stringify(datosLogin)
     })
-    .then(response => {
+    .then(async response => {
+
+        const data = await response.json();
 
         if (!response.ok) {
-            throw new Error("Credenciales incorrectas");
+            throw new Error(data.detail);
         }
 
-        return response.json();
+        return data;
 
     })
     .then(data => {
-
-        console.log("Llego");
-
-        console.log(data);
-
-        console.log(data.rol);
-
-        alert("ANTES DEL IF");
+        localStorage.setItem("rol", data.rol);
 
         if (data.rol === "ADMINISTRADOR") {
-            alert("entro al administrador");
             window.location.href = "/index";
         }
 
@@ -91,7 +86,6 @@ loginButton.addEventListener("click", () => {
             window.location.href = "/confirmacionDeCitas";
         }
     
-        alert("DESPUES DEL IF");
     })
     .catch(error => {
 

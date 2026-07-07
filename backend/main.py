@@ -3,6 +3,7 @@ from backend.routers.usuarios import router as usuarios_router
 from backend.routers import auth
 from fastapi.staticfiles import StaticFiles
 from backend.routers import vistas
+from backend.routers.pacientes import router as pacientes_router
 
 
 app = FastAPI()
@@ -13,3 +14,4 @@ app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 app.include_router(usuarios_router)
 app.include_router(auth.router)
 app.include_router(vistas.router)
+app.include_router(pacientes_router)

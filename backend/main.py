@@ -14,8 +14,9 @@ app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 # API
 app.include_router(usuarios_router)
 app.include_router(medicos_router)
+app.include_router(pacientes_router)
 app.include_router(auth.router)
 app.include_router(vistas.router)
-app.include_router(pacientes_router)
+
 
 

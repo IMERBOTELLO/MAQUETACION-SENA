@@ -50,11 +50,15 @@ fetch("http://127.0.0.1:8000/pacientes/")
 
                 <td class="text-center">
 
-                    <button class="btn btn-warning btn-sm me-1">
+                    <button 
+                        class="btn btn-warning btn-sm me-1 editar"
+                        data-id="${paciente.id_paciente}">
                         <i class="bi bi-pencil"></i>
                     </button>
 
-                    <button class="btn btn-danger btn-sm">
+                    <button 
+                        class="btn btn-danger btn-sm eliminar"
+                        data-id="${paciente.id_paciente}">
                         <i class="bi bi-trash"></i>
                     </button>
 
@@ -67,4 +71,47 @@ fetch("http://127.0.0.1:8000/pacientes/")
 
 .catch(error => {
     alert(error.message);
+});
+
+document.addEventListener("click", function(event) {
+
+    if (event.target.closest(".eliminar")) {
+
+        const dataId = event.target.closest(".eliminar").dataset.id;
+
+        if (confirm("¿Está seguro de que desea eliminar este paciente?")) {
+            
+            fetch("http://127.0.0.1:8000/pacientes/" + dataId, {
+
+                method: "DELETE",
+
+             })
+
+            .then(response => response.json())
+
+            .then(data => {
+                alert("paciente eliminado");
+
+                location.reload();
+            })
+            
+            .catch(error => {
+                console.log(error);
+            });
+        }
+    }
+
+});
+
+document.addEventListener("click", function(event) {
+
+    const botonEditar = event.target.closest(".editar");
+
+    if (!botonEditar) {
+        return;
+    }
+
+    const idPaciente = botonEditar.dataset.id;
+
+    window.location.href = `/registro_paciente?id=${idPaciente}`;
 });

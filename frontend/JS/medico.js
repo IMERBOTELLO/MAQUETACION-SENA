@@ -1,3 +1,53 @@
+document.getElementById("buscarBtn").addEventListener("click", async function () {
+
+    const documento = document.getElementById("numero_documento").value;
+
+    if (documento.trim() === "") {
+        alert("Ingrese un número de documento");
+        return;
+    }
+
+    try {
+
+        const respuesta = await fetch(`http://127.0.0.1:8000/pacientes/documento/${documento}`);
+
+        if (!respuesta.ok) {
+            throw new Error("Paciente no encontrado");
+        }
+
+        const paciente = await respuesta.json();
+
+        document.getElementById("nombrePaciente").value =
+            paciente.nombres_paciente + " " + paciente.apellidos_pacientes;
+
+        document.getElementById("telefonoPaciente").value =
+            paciente.telefono;
+
+        const nacimiento = new Date(paciente.fecha_nacimiento);
+        const hoy = new Date();
+
+        let edad = hoy.getFullYear() - nacimiento.getFullYear();
+
+        const mes = hoy.getMonth() - nacimiento.getMonth();
+
+        if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+            edad--;
+        }
+
+        document.getElementById("edadPaciente").value = edad + " años";
+
+    } catch (error) {
+
+        alert(error.message);
+
+        document.getElementById("nombrePaciente").value = "";
+        document.getElementById("telefonoPaciente").value = "";
+        document.getElementById("edadPaciente").value = "";
+    }
+
+});
+
+
 document.getElementById("guardarBtn").addEventListener("click", async function () {
 
     const numero_documento = document.getElementById("numero_documento").value;

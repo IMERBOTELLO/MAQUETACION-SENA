@@ -2,7 +2,7 @@
 --
 -- Host: 127.0.0.1    Database: atencion_medica
 -- ------------------------------------------------------
--- Server version	8.0.45
+-- Server version	9.6.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,6 +14,14 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+SET @MYSQLDUMP_TEMP_LOG_BIN = @@SESSION.SQL_LOG_BIN;
+SET @@SESSION.SQL_LOG_BIN= 0;
+
+--
+-- GTID state at the beginning of the backup 
+--
+
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'bd294991-1195-11f1-96a4-9c6b00aced05:1-320';
 
 --
 -- Table structure for table `atencion_medica`
@@ -30,7 +38,7 @@ CREATE TABLE `atencion_medica` (
   `NUMERO_DOCUMENTO` varchar(20) NOT NULL,
   `EXAMENES` varchar(255) NOT NULL,
   PRIMARY KEY (`ID_ATENCION`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +47,6 @@ CREATE TABLE `atencion_medica` (
 
 LOCK TABLES `atencion_medica` WRITE;
 /*!40000 ALTER TABLE `atencion_medica` DISABLE KEYS */;
-INSERT INTO `atencion_medica` VALUES (1,'Gripe','Paciente con fiebre leve','2026-03-10','',''),(2,'Dolor estomacal','Molestia abdominal','2026-03-11','',''),(3,'Presion alta','Presion elevada','2026-03-12','',''),(4,'TYTTUYU','GGJHGHGH','2026-07-12','1115729778','Glucosa'),(5,'dolor de cabeza','dolor muy suerte','2026-07-14','106687451','Orina'),(6,'gripe comun','reposo e hidratacion','2026-07-14','123456789','Glucosa'),(7,'Gripe común','Reposo e hidratación','2026-07-14','106687451','Hemograma'),(8,'gripe','reposo','2026-07-14','777888999','Hemograma');
 /*!40000 ALTER TABLE `atencion_medica` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -56,13 +63,13 @@ CREATE TABLE `cita` (
   `ID_MEDICO` int NOT NULL,
   `FECHA_HORA` datetime NOT NULL,
   `ESTADO` tinyint(1) NOT NULL,
-  `PENDIENTE` varchar(100) NOT NULL,
+  `PENDIENTE` tinyint(1) NOT NULL,
   PRIMARY KEY (`ID_CITA`),
-  UNIQUE KEY `ID_PACIENTE` (`ID_PACIENTE`),
-  UNIQUE KEY `ID_MEDICO` (`ID_MEDICO`),
+  KEY `ID_PACIENTE` (`ID_PACIENTE`),
+  KEY `ID_MEDICO` (`ID_MEDICO`),
   CONSTRAINT `cita_ibfk_1` FOREIGN KEY (`ID_PACIENTE`) REFERENCES `paciente` (`ID_PACIENTE`),
   CONSTRAINT `cita_ibfk_2` FOREIGN KEY (`ID_MEDICO`) REFERENCES `medico` (`ID_MEDICO`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +78,6 @@ CREATE TABLE `cita` (
 
 LOCK TABLES `cita` WRITE;
 /*!40000 ALTER TABLE `cita` DISABLE KEYS */;
-INSERT INTO `cita` VALUES (1,1,1,'2026-03-10 09:00:00',1,'No'),(2,2,2,'2026-03-11 10:30:00',0,'No'),(3,3,3,'2026-03-12 14:00:00',1,'Si');
 /*!40000 ALTER TABLE `cita` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,7 +100,7 @@ CREATE TABLE `examen` (
   PRIMARY KEY (`ID_EXAMEN`),
   UNIQUE KEY `ID_ATENCION` (`ID_ATENCION`),
   CONSTRAINT `examen_ibfk_1` FOREIGN KEY (`ID_ATENCION`) REFERENCES `atencion_medica` (`ID_ATENCION`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -103,7 +109,6 @@ CREATE TABLE `examen` (
 
 LOCK TABLES `examen` WRITE;
 /*!40000 ALTER TABLE `examen` DISABLE KEYS */;
-INSERT INTO `examen` VALUES (1,1,'Examen de sangre','2026-03-10',1,'Dr. Andres Gomez',1,'Juan Perez'),(2,2,'Radiografia','2026-03-11',2,'Dra. Laura Torres',2,'Maria Lopez'),(3,3,'Electrocardiograma','2026-03-12',3,'Dr. Miguel Castro',3,'Carlos Ramirez');
 /*!40000 ALTER TABLE `examen` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,9 +125,8 @@ CREATE TABLE `laboratorio` (
   `RESPONSABLE` varchar(100) DEFAULT NULL,
   `CORREO_LAB` varchar(120) DEFAULT NULL,
   `TELEFONO_CONTACTO` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`ID_LAB`),
-  UNIQUE KEY `NOMBRE_LAB` (`NOMBRE_LAB`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`ID_LAB`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,7 +135,6 @@ CREATE TABLE `laboratorio` (
 
 LOCK TABLES `laboratorio` WRITE;
 /*!40000 ALTER TABLE `laboratorio` DISABLE KEYS */;
-INSERT INTO `laboratorio` VALUES (1,'Laboratorio Central','Ana Martinez','labcentral@gmail.com','3201234567'),(2,'Lab Clinico Salud','Pedro Garcia','labsalud@gmail.com','3214567890'),(3,'Diagnostico Medico','Luisa Fernandez','diagnostico@gmail.com','3229876543');
 /*!40000 ALTER TABLE `laboratorio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -150,7 +153,7 @@ CREATE TABLE `medico` (
   `CORREO` varchar(120) NOT NULL,
   PRIMARY KEY (`ID_MEDICO`),
   UNIQUE KEY `TELEFONO` (`TELEFONO`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -159,7 +162,6 @@ CREATE TABLE `medico` (
 
 LOCK TABLES `medico` WRITE;
 /*!40000 ALTER TABLE `medico` DISABLE KEYS */;
-INSERT INTO `medico` VALUES (1,'Dr. Andres Gomez','Cardiologia','3104567890','andresgomez@gmail.com'),(2,'Dra. Laura Torres','Pediatria','3117894561','lauratorres@gmail.com'),(3,'Dr. Miguel Castro','Medicina General','3126549870','miguelcastro@gmail.com'),(5,'string','naturista','string','string');
 /*!40000 ALTER TABLE `medico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -173,15 +175,15 @@ DROP TABLE IF EXISTS `paciente`;
 CREATE TABLE `paciente` (
   `ID_PACIENTE` int NOT NULL AUTO_INCREMENT,
   `NOMBRES_PACIENTE` varchar(255) NOT NULL,
-  `APELLIDOS_PACIENTES` varchar(255) DEFAULT NULL,
-  `FECHA_NACIMIENTO` date DEFAULT NULL,
-  `NUMERO_DOCUMENTO` int NOT NULL,
+  `APELLIDOS_PACIENTES` varchar(255) NOT NULL,
+  `FECHA_NACIMIENTO` date NOT NULL,
+  `NUMERO_DOCUMENTO` varchar(25) NOT NULL,
   `CORREO` varchar(120) NOT NULL,
-  `FECHA_REGISTRO` date DEFAULT NULL,
+  `FECHA_REGISTRO` date NOT NULL,
   `TELEFONO` varchar(20) NOT NULL,
   PRIMARY KEY (`ID_PACIENTE`),
   UNIQUE KEY `NUMERO_DOCUMENTO` (`NUMERO_DOCUMENTO`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -190,7 +192,7 @@ CREATE TABLE `paciente` (
 
 LOCK TABLES `paciente` WRITE;
 /*!40000 ALTER TABLE `paciente` DISABLE KEYS */;
-INSERT INTO `paciente` VALUES (1,'Juan Perez','Perez','2000-01-01',106687451,'juanperez@gmail.com','2026-07-12','300123456'),(2,'Maria Lopez','Lopez','2001-02-02',1024512021,'marialopez@gmail.com','2026-07-12','301456789'),(3,'Carlos Ramirez','Ramirez','1999-03-03',106608541,'carlosramirez@gmail.com','2026-07-12','302789456'),(4,'pedro','gomez','2001-05-10',123456789,'pedro@gmail.com','2026-07-13','3115556677'),(5,'Ana','Torres ','2002-04-10',777888999,'ana@gmail.com','2026-07-14','3001112233');
+INSERT INTO `paciente` VALUES (5,'liliana','paez','2005-01-22','451161616','liliana@gmail.com','2026-07-09','461616346'),(6,'Imer','paez','2007-06-22','4974878416','imerantoniobotellopaez@gmail.com','2026-01-22','3004188526'),(7,'imer','botello','2008-01-22','48887846','imerbotello@gmail.com','2026-07-13','3011645152'),(9,'camilo','andrez','2007-02-06','15484651213','andrez@gmial.com','2026-07-13','30048674851');
 /*!40000 ALTER TABLE `paciente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -208,11 +210,11 @@ CREATE TABLE `resultado` (
   `ARCHIVO` varchar(255) NOT NULL,
   `ID_EXAMEN` int NOT NULL,
   PRIMARY KEY (`ID_RESULTADO`),
-  UNIQUE KEY `ID_LAB` (`ID_LAB`),
   KEY `ID_EXAMEN` (`ID_EXAMEN`),
+  KEY `ID_LAB` (`ID_LAB`),
   CONSTRAINT `resultado_ibfk_1` FOREIGN KEY (`ID_EXAMEN`) REFERENCES `examen` (`ID_EXAMEN`),
   CONSTRAINT `resultado_ibfk_2` FOREIGN KEY (`ID_LAB`) REFERENCES `laboratorio` (`ID_LAB`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -221,7 +223,6 @@ CREATE TABLE `resultado` (
 
 LOCK TABLES `resultado` WRITE;
 /*!40000 ALTER TABLE `resultado` DISABLE KEYS */;
-INSERT INTO `resultado` VALUES (1,1,'2026-03-11','resultado1.pdf',1),(2,2,'2026-03-12','resultado2.pdf',2),(3,3,'2026-03-13','resultado3.pdf',3);
 /*!40000 ALTER TABLE `resultado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -239,7 +240,7 @@ CREATE TABLE `usuario` (
   `ROL` enum('RECEPCIONISTA','MEDICO','LABORATORIO','PACIENTE','ADMINISTRADOR') NOT NULL,
   PRIMARY KEY (`ID_USUARIO`),
   UNIQUE KEY `CORREO` (`CORREO`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -248,9 +249,10 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'wilsonfv777@gmail.com','W290208f','MEDICO'),(2,'recepcion@gmail.com','12345','RECEPCIONISTA');
+INSERT INTO `usuario` VALUES (4,'imerbotello@gmail.com','1365645','ADMINISTRADOR'),(5,'camilobotello@gmail.com','134','PACIENTE'),(6,'liliana@gmail.com','134','RECEPCIONISTA'),(9,'imerantonio@gmail.com','12345','LABORATORIO'),(10,'imerpaez@gmail.com','12345','MEDICO');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
+SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -261,4 +263,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-07-14 19:18:48
+-- Dump completed on 2026-07-15 10:25:47

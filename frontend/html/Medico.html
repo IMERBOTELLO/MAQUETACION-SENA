@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medico</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+<nav class="navbar navbar-expand-xl navbar-dark bg-primary shadow">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#"><h1>Medicos</h1></a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/index">Inicio</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/registro_paciente">Registro Paciente</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/agendamientoDeCitas">Agendamiento de Citas</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/confirmacionDeCitas">Citas Programadas</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/Medico">Medicos</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/laboratorio">Laboratorio</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/resultados">Resultados</a>
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<main class="flex-fill">
+
+<div class="container mt-5">
+
+<div class="card shadow p-4">
+
+<h2 class="text-center text-success mb-4">
+Módulo Médico
+</h2>
+
+<div class="mb-3">
+
+<label class="form-label">
+Buscar paciente (Número de Documento)
+</label>
+
+<div class="input-group">
+
+<input
+id="numero_documento"
+type="text"
+class="form-control"
+placeholder="Ingrese número de documento">
+
+<button
+id="buscarBtn"
+class="btn btn-primary">
+Buscar
+</button>
+
+</div>
+
+</div>
+
+<h5 class="text-secondary">
+Datos del Paciente
+</h5>
+
+<div class="row">
+
+<div class="col-md-4">
+
+<input
+id="nombrePaciente"
+type="text"
+class="form-control mb-2"
+placeholder="Nombre"
+disabled>
+
+</div>
+
+<div class="col-md-4">
+
+<input
+id="edadPaciente"
+type="text"
+class="form-control mb-2"
+placeholder="Edad"
+disabled>
+
+</div>
+
+<div class="col-md-4">
+
+<input
+id="telefonoPaciente"
+type="text"
+class="form-control mb-2"
+placeholder="Teléfono"
+disabled>
+
+</div>
+
+</div>
+
+<div class="mb-3">
+
+<label>Diagnóstico</label>
+
+<textarea
+id="diagnostico"
+class="form-control"
+rows="3">
+</textarea>
+
+</div>
+
+<div class="mb-3">
+
+<label>Observaciones</label>
+
+<textarea
+id="observaciones"
+class="form-control"
+rows="3">
+</textarea>
+
+</div>
+
+<div class="mb-4">
+
+<label>Solicitar Exámenes</label>
+
+<select
+id="examenes"
+class="form-select"
+multiple>
+
+<option>Hemograma</option>
+<option>Glucosa</option>
+<option>Perfil Lipídico</option>
+<option>Orina</option>
+<option>COVID</option>
+<option>Radiografia</option>
+
+</select>
+
+</div>
+
+<div class="d-flex justify-content-between">
+
+<button
+id="guardarBtn"
+class="btn btn-success">
+
+Guardar Diagnóstico
+
+</button>
+
+<button
+id="ordenBtn"
+class="btn btn-warning">
+
+Generar Orden
+
+</button>
+
+</div>
+
+<div id="resultadoMedico" class="mt-4"></div>
+
+</div>
+
+</div>
+
+</main>
+
+<footer class="bg-primary text-white text-center py-3 mt-5">
+© 2026 Sistema de Gestión Hospitalaria | Proyecto Académico HOSPISOFT - SENA
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/frontend/JS/medico.js"></script>
+<script src="/frontend/JS/seguridad.js"></script>
+
+</body>
+</html>

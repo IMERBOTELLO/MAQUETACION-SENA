@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INICIO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/frontend/estilos/index.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+
+
+    <nav class="navbar navbar-expand-xl navbar-dark bg-primary shadow">
+        <div class="container-fluid">
+          <a class="navbar-brand titulo-navbar" href="#"><h1> Sistema Hospitalario</h1></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/index">Inicio</a>
+              </li>
+              
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/registro_paciente">Registro Paciente</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/agendamientoDeCitas">Agendamiento de Citas</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/confirmacionDeCitas">citas programadas</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/Medico">Medicos</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/laboratorio">laboratorio</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/resultados">resultados</a>
+              </li>
+
+            </ul>
+            <form class="d-flex" role="search">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
+  </nav>
+  
+
+  <main class="flex-fill">
+  <section class="bg-light py-5">
+  <div class="container text-center">
+    <h1 class="display-5 fw-bold text-primary">Bienvenido al Sistema de Gestion Hospitalaria</h1>
+    <p class="lead text-muted">
+      Plataforma para la administracion de pacientes, agendamientos de citas, citas medicas, diagnosticos y resultados de laboratorio.
+    </p>
+
+    <img src="https://cdn-icons-png.flaticon.com/512/2966/2966485.png" width="120" class="mt-3">
+  </div>
+</section>
+
+
+
+  <div class="container my-5">
+  <div class="row g-4">
+
+    <div class="col-md-3">
+      <div class="card shadow h-100 text-center">
+        <div class="card-body">
+          <img src="https://cdn-icons-png.flaticon.com/512/4320/4320337.png" width="60" class="mb-3">
+          <h5 class="card-title">Pacientes</h5>
+          <p class="card-text">Registrar y consultar pacientes.</p>
+          <a href="/registro_paciente" class="btn btn-primary">Ir al modulo</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow h-100 text-center">
+        <div class="card-body">
+          <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png" width="60" class="mb-3">
+          <h5 class="card-title">Citas</h5>
+          <p class="card-text">Agendar y verificar citas medicas.</p>
+          <a href="/agendamientoDeCitas" class="btn btn-primary">Ir al modulo</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow h-100 text-center">
+        <div class="card-body">
+          <img src="https://cdn-icons-png.flaticon.com/512/2784/2784445.png" width="60" class="mb-3">
+          <h5 class="card-title">Laboratorio</h5>
+          <p class="card-text">Gestion de examenes medicos.</p>
+          <a href="/laboratorio" class="btn btn-primary">Ir al modulo</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow h-100 text-center">
+        <div class="card-body">
+          <img src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png" width="60" class="mb-3">
+          <h5 class="card-title">Diagnosticos</h5>
+          <p class="card-text">Registro de diagnosticos medicos.</p>
+          <a href="/Medico" class="btn btn-primary">Ir al modulo</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+
+
+  <section class="container py-5">
+    <h2 class="text-primary mb-4">Funciones Principales del Sistema</h2>
+    
+    <div class="row"></div>
+    <div class="col-md-4">
+      <h5 class="fw-bold">Gestion de Pacientes</h5>
+      <p>Registro completo de pacientes con historial clinico basico y seguimiento medico.</p>
+    </div>
+
+    <div class="col-md-4">
+      <h5 class="fw-bold">Administracion de Citas</h5>
+      <p>Agendamiento eficiente de citas segun disponibilidad medica y especialidad.</p>
+    </div>
+
+    <div class="col-md-4">
+      <h5 class="fw-bold">Control de Resultados</h5>
+      <p>Gestion de examenes de laboratorio y actualizacion de diagnosticos medicos.</p>
+    </div>
+  </div>
+</section>
+
+
+
+  <section class="bg-light py-5">
+  <div class="container">
+    <h2 class="text-primary mb-4">Seguridad y Tecnologia</h2>
+    <p class="lead">
+      Este sistema ha sido diseñado bajo principios de seguridad, confidencialidad de datos medicos y disponibilidad permanente.
+      Cumple con estandares de proteccion de la informacion y ofrece acceso seguro para personal autorizado.
+    </p>
+  </div>
+</section>
+
+
+
+  <section class="bg-light py-5">
+  <div class="container">
+    <h2 class="text-primary mb-3">Sistema de Informacion Clinica</h2>
+    <p class="lead text-muted">
+      Esta plataforma permite la gestion integral de procesos medicos y administrativos,
+      garantizando organizacion, seguridad de la informacion y apoyo en la toma de decisiones clinicas.
+    </p>
+  </div>
+</section>
+
+  </main>
+
+  <footer class="bg-primary text-white text-center py-3 mt-5">
+  © 2026 Sistema de Gestion Hospitalaria  | Proyecto Academico (HOSPISOFT) - SENA
+  </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="/frontend/js/seguridad.js"></script>
+  </body>
+</html>

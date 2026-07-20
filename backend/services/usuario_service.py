@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session
 from backend.models.usuario import Usuario
 from backend.schemas.usuario_shema import UsuarioCreate
-from typing import Optional
 
 def crear_usuario(db: Session, usuario: UsuarioCreate):
     

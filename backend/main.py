@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from backend.routers.usuarios import router as usuarios_router
 from backend.routers.medicos import router as medicos_router
+from backend.routers.resultados import router as resultados_router
 from backend.routers.atenciones_medicas import router as atenciones_router
 from backend.routers import auth
 from fastapi.staticfiles import StaticFiles
@@ -15,6 +16,7 @@ app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 app.include_router(usuarios_router)
 app.include_router(medicos_router)
 app.include_router(pacientes_router)
+app.include_router(resultados_router)
 app.include_router(auth.router)
 app.include_router(vistas.router)
 app.include_router(atenciones_router)

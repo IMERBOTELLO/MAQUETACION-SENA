@@ -29,26 +29,26 @@ def obtener_resultado_por_id(db: Session, id_resultado: int):
     ).first()
     
 def actualizar_resultado(db: Session, id_resultado: int, resultado: ResultadoCreate):
-    usuario_db = db.query(Resultado).filter(
+    resultado_db = db.query(Resultado).filter(
         Resultado.id_resultado == id_resultado
     ).first()
     
-    if usuario_db is None:
+    if resultado_db is None:
         return None
     
-    usuario_db.id_lab = resultado.id_lab
-    usuario_db.documento_paciente = resultado.documento_paciente
-    usuario_db.nombre_paciente = resultado.nombre_paciente
-    usuario_db.examen_medico = resultado.examen_medico
-    usuario_db.fecha_resultado = resultado.fecha_resultado
-    usuario_db.info_examen = resultado.info_examen
-    usuario_db.pdf = resultado.pdf
-    usuario_db.id_examen = resultado.id_examen
+    resultado_db.id_lab = resultado.id_lab
+    resultado_db.documento_paciente = resultado.documento_paciente
+    resultado_db.nombre_paciente = resultado.nombre_paciente
+    resultado_db.examen_medico = resultado.examen_medico
+    resultado_db.fecha_resultado = resultado.fecha_resultado
+    resultado_db.info_examen = resultado.info_examen
+    resultado_db.pdf = resultado.pdf
+    resultado_db.id_examen = resultado.id_examen
     
     db.commit()
-    db.refresh(usuario_db)
+    db.refresh(resultado_db)
     
-    return usuario_db
+    return resultado_db
 
 def eliminar_resultado(db: Session, id_resultado: int):
     resultado_db = db.query(Resultado).filter(

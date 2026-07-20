@@ -24,5 +24,5 @@ class Resultado(Base):
     fecha_resultado = Column(Date, nullable = False)
     info_examen = Column(String(255), nullable = False)
     pdf = Column(LargeBinary, nullable = False)
-    id_examen = Column(Integer, ForeignKey('examen.ID_EXAMEN'), nullable = False)
+    id_examen = Column(Integer, ForeignKey('atencion_medica.ID_ATENCION'), nullable = False)
     

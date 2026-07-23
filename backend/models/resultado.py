@@ -6,7 +6,7 @@ class Resultado(Base):
     __tablename__ = 'RESULTADO'
     
     id_resultado = Column(Integer, primary_key = True, autoincrement = True)
-    id_lab = Column(Integer, ForeignKey('laboratorio.ID_LAB'), nullable = False)
+    id_lab = Column(Integer, ForeignKey('LABORATORIO.id_lab'), nullable = False)
     documento_paciente = Column(Integer, nullable = False)
     nombre_paciente = Column(String(120), nullable = False)
     examen_medico = Column(

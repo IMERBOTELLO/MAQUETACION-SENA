@@ -57,3 +57,8 @@ def eliminar_laboratorio(db: Session, id_lab: int):
     
     return laboratorio_db
 
+
+def obtener_laboratorio_por_numero_documento(db: Session, documento: str):
+    return db.query(Laboratorio).filter(
+        Laboratorio.numero_documento == documento
+    ).first()

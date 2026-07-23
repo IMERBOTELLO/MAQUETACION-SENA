@@ -10,7 +10,9 @@ from backend.services.atencion_service import (
     crear_atencion,
     obtener_atenciones,
     obtener_atencion_por_id,
+    obtener_atencion_por_numero_documento
 )
+from fastapi import HTTPException
 
 router = APIRouter(
     prefix="/atenciones_medicas",
@@ -27,6 +29,20 @@ def crear(atencion: AtencionMedicaCreate, db: Session = Depends(get_db)):
 def listar(db: Session = Depends(get_db)):
     return obtener_atenciones(db)
 
+@router.get("/documento/{documento}", response_model=AtencionMedicaResponse)
+def buscar_por_documento(
+    documento: int,
+    db: Session = Depends(get_db)
+):
+    atencion = obtener_atencion_por_numero_documento(db, documento)
+
+    if atencion is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Atención médica no encontrada"
+        )
+
+    return atencion
 
 @router.get("/{id_atencion}", response_model=AtencionMedicaResponse)
 def obtener(id_atencion: int, db: Session = Depends(get_db)):

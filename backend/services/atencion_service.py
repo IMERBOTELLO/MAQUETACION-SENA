@@ -19,3 +19,9 @@ def obtener_atencion_por_id(db: Session, id_atencion: int):
     return db.query(AtencionMedica).filter(
         AtencionMedica.id_atencion == id_atencion
     ).first()
+    
+def obtener_atencion_por_numero_documento(db: Session, documento: str):
+    return db.query(AtencionMedica).filter(
+        AtencionMedica.numero_documento == documento
+    ).first()
+    

@@ -6,13 +6,75 @@ let entregasRealizadas = [];
 let nextId = 1;
 
 // Función para registrar resultado (RF06)
-function registrarResultado() {
-    const documento = document.getElementById('docPaciente').value;
-    const nombre = document.getElementById('nombrePaciente').value;
-    const examen = document.getElementById('tipoExamen').value;
-    const fecha = document.getElementById('fechaResultado').value;
-    const valores = document.getElementById('valoresExamen').value;
-    
+async function registrarResultado() {
+
+    const documento = document.getElementById("docPaciente").value;
+    const nombre = document.getElementById("nombrePaciente").value;
+    const examen = document.getElementById("tipoExamen").value;
+    const fecha = document.getElementById("fechaResultado").value;
+    const valores = document.getElementById("valoresExamen").value;
+    const archivo = document.getElementById("archivoPDF").files[0];
+
+    if(!archivo) {
+        alert('❌ Error: Debe seleccionar un archivo para subir');
+        return;
+    }
+
+    const pdfBase64 = await convertFileToBase64(archivo);
+
+    const respuestaLaboratorio = await fetch(
+        `http://127.0.0.1:8000/laboratorios/documento/${documento}`
+    );
+
+    if (!respuestaLaboratorio.ok) {
+        alert('❌ Error: No se pudo obtener el laboratorio para este paciente');
+        return;
+    }
+
+    const laboratorio = await respuestaLaboratorio.json();
+
+    const respuestaAtencion = await fetch(
+        `http://127.0.0.1:8000/atenciones_medicas/documento/${documento}`
+    );
+
+    if (!respuestaAtencion.ok) {
+        alert('❌ Error: No se pudo obtener la atención para este paciente');
+        return;
+    }
+
+    const atencion = await respuestaAtencion.json();
+
+    const datos = {
+        id_lab: laboratorio.id_lab,
+        documento_paciente: documento,
+        nombre_paciente: nombre,
+        examen_medico: examen,
+        fecha_resultado: fecha,
+        info_examen: valores,
+        pdf: pdfBase64,
+        id_examen: atencion.id_atencion
+    };
+
+    const respuesta = await fetch(
+        `http://127.0.0.1:8000/resultados/`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datos)
+        }
+    );
+
+    if (!respuesta.ok) {
+
+        const error = await respuesta.json();
+        alert(`❌ Error: ${error.detail}`);
+        return;
+    }
+
+    alert('✅ Resultado registrado exitosamente');
+
     // Validación de campos obligatorios
     if(!documento || !nombre || !examen || !fecha) {
         alert('❌ Error: Debe completar todos los campos obligatorios (Documento, Nombre, Examen, Fecha)');
@@ -356,3 +418,20 @@ function mostrarModal(titulo, mensaje) {
 }
 
 renderizarTodo();
+
+function convertFileToBase64(archivo) {
+    return new Promise((resolve, reject) => {
+        const lector = new FileReader();
+
+        lector.onload = () => {
+
+            const base64 = lector.result.split(",")[1];
+            resolve(base64);
+        };
+
+        lector.onerror = error => reject(error);
+
+        lector.readAsDataURL(archivo);
+    });
+
+}

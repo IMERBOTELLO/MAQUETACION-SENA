@@ -16,7 +16,7 @@ async function guardarLaboratorio(event) {
 
 
     const respuesta = await fetch(
-        "http://127.0.0.1:8000/laboratorio",
+        "http://127.0.0.1:8000/laboratorios/",
         {
             method: "POST",
 

@@ -7,7 +7,7 @@ def crear_cita(db: Session, cita: CitaCreate):
     nueva_cita = Cita(
         nombre_paciente = cita.nombre_paciente,
         numero_documento_paciente = cita.numero_documento_paciente,
-        especialista = cita.especialista,
+        id_medico = cita.id_medico,
         fecha = cita.fecha,
         hora = cita.hora,
         servicio = cita.servicio
@@ -36,7 +36,7 @@ def actualizar_cita(db: Session, id_cita: int, cita: CitaCreate):
     
     cita_db.nombre_paciente = cita.nombre_paciente
     cita_db.numero_documento_paciente = cita.numero_documento_paciente
-    cita_db.especialista = cita.especialista
+    cita_db.id_medico = cita_db.id_medico
     cita_db.fecha = cita.fecha
     cita_db.hora = cita.hora
     cita_db.servicio = cita.servicio

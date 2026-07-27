@@ -17,19 +17,19 @@ class Servicio(str, Enum):
 class CitaCreate(BaseModel):
     nombre_paciente: str
     numero_documento_paciente: int
-    especialista: str
     fecha: date
     hora: time
     servicio: Servicio
+    id_medico: int
     
 class CItaResponse(BaseModel):
     id_cita: int
     nombre_paciente: str
     numero_documento_paciente: int
-    especialista: str
     fecha: date
     hora: time
     servicio: Servicio
+    id_medico: int
     
     class Config:
         from_attributes = True

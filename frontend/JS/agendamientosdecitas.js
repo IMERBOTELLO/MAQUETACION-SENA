@@ -1,57 +1,126 @@
-// Calendario
-flatpickr("#fecha", {
-  minDate: "today",
-  dateFormat: "Y-m-d",
-  onChange: function(selectedDates, dateStr) {
-    cargarHorarios(dateStr);
+window.addEventListener("DOMContentLoaded", cargarMedicos);
+
+async function cargarMedicos() {
+
+  try {
+
+    const respuesta = await fetch("http://127.0.0.1:8000/medicos/");
+
+    if (!respuesta.ok) {
+      throw new Error("No se puediron cargar los medicos");
+    }
+
+    const medicos = await respuesta.json();
+
+    const select = document.getElementById("profesional");
+    
+    medicos.forEach(medico => {
+      const opcion = document.createElement("option");
+      opcion.value = medico.id_medico;
+
+      opcion.textContent =
+        "Dr." + 
+        medico.nombre_medico +
+        " - " +
+        medico.especialidad;
+      
+      select.appendChild(opcion);
+    });
+  
+  } catch (error) {
+    console.error(error);
   }
-});
 
-// Horarios simulados
-function cargarHorarios(fecha) {
-  const horas = ["09:00", "10:00", "11:00", "14:00", "15:00"];
-  const select = document.getElementById("hora");
-  select.innerHTML = '<option value="">Selecciona hora</option>';
-
-  horas.forEach(h => {
-    const option = document.createElement("option");
-    option.value = h;
-    option.textContent = h;
-    select.appendChild(option);
-  });
 }
 
-// Simulación de pago
-let pagoRealizado = false;
 
-function simularPago() {
-  pagoRealizado = true;
-  document.getElementById("estadoPago").classList.remove("d-none");
-}
+const inputDocumento = document.getElementById("NUMERO_CEDULA");
+inputDocumento.addEventListener("blur", buscarPaciente);
 
-// Enviar a WhatsApp
-document.getElementById("formCita").addEventListener("submit", function(e) {
-  e.preventDefault();
+async function buscarPaciente() {
+  const documento = document.getElementById("NUMERO_CEDULA").value;
 
-  if (!pagoRealizado) {
-    alert("Debes realizar el pago primero");
+  if (documento.trim() === "") {
     return;
   }
 
+  try {
+
+    const respuesta = await fetch (
+      `http://127.0.0.1:8000/pacientes/documento/${documento}`
+    );
+
+    if (!respuesta.ok) {
+      throw new Error ("Paciente no encontrado");
+    }
+
+    const paciente = await respuesta.json();
+
+    document.getElementById("nombre").value =
+      paciente.nombres_paciente + " " + paciente.apellidos_pacientes;
+  
+  } catch (error) {
+
+    document.getElementById("nombre").value = "";
+
+    alert("Paciente no encontrado");
+
+  }
+
+}
+
+document.getElementById("formCita").addEventListener("submit", async function(e) {
+
+  e.preventDefault();
+  
   const nombre = document.getElementById("nombre").value;
-  const telefono = document.getElementById("telefono").value;
+  const numero_documento = document.getElementById("NUMERO_CEDULA").value;
   const profesional = document.getElementById("profesional").value;
   const fecha = document.getElementById("fecha").value;
-  const hora = document.getElementById("hora").value;
+  const hora = document.getElementById("time").value;
   const servicio = document.getElementById("servicio").value;
 
-  const mensaje = `Hola, quiero confirmar mi cita:
-Nombre: ${nombre}
-Profesional: ${profesional}
-Fecha: ${fecha}
-Hora: ${hora}
-Servicio: ${servicio}`;
 
-  const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-  window.open(url, "_blank");
+
+  const datos = {
+
+    nombre_paciente: nombre,
+    numero_documento_paciente: numero_documento,
+    id_medico: parseInt(profesional),
+    fecha: fecha,
+    hora: hora,
+    servicio: servicio
+
+  };
+
+  try {
+    const respuesta = await fetch(
+      "http://127.0.0.1:8000/citas/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(datos)
+      }
+    );
+
+    if (!respuesta.ok) {
+      throw new Error ("No se pudo crear la cita");
+    }
+
+    const cita = await respuesta.json();
+
+    alert("Cita creada con éxito");
+
+    location.reload();
+
+  } catch (error) {
+
+    alert(error.message);
+
+  }
+
+  
+
 });

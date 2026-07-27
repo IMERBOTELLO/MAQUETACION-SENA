@@ -37,3 +37,7 @@ p {
     color: #374151; /* gris oscuro suave */
     line-height: 1.6;
 }
+
+.nombre {
+    background-color: #9e1414;
+}

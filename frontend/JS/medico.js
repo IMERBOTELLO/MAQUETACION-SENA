@@ -9,7 +9,7 @@ document.getElementById("buscarBtn").addEventListener("click", async function ()
 
     try {
 
-        const respuesta = await fetch(`http://127.0.0.1:8000/pacientes/documento/${documento}`);
+        const respuesta = await fetch(`http://127.0.0.1:8000/citas/documento/${documento}`);
 
         if (!respuesta.ok) {
             throw new Error("Paciente no encontrado");

@@ -9,32 +9,22 @@ document.getElementById("buscarBtn").addEventListener("click", async function ()
 
     try {
 
-        const respuesta = await fetch(`http://127.0.0.1:8000/citas/documento/${documento}`);
+        const respuesta = await fetch(`http://127.0.0.1:8000/citas/paciente/${documento}`);
 
         if (!respuesta.ok) {
-            throw new Error("Paciente no encontrado");
+            throw new Error("Paciente no encontrado o no tiene cita programada");
         }
 
         const paciente = await respuesta.json();
 
         document.getElementById("nombrePaciente").value =
-            paciente.nombres_paciente + " " + paciente.apellidos_pacientes;
+            paciente.nombre;
 
         document.getElementById("telefonoPaciente").value =
             paciente.telefono;
 
-        const nacimiento = new Date(paciente.fecha_nacimiento);
-        const hoy = new Date();
-
-        let edad = hoy.getFullYear() - nacimiento.getFullYear();
-
-        const mes = hoy.getMonth() - nacimiento.getMonth();
-
-        if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
-            edad--;
-        }
-
-        document.getElementById("edadPaciente").value = edad + " años";
+        document.getElementById("edadPaciente").value = 
+        paciente.edad + " años";
 
     } catch (error) {
 

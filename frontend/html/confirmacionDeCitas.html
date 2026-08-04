@@ -80,8 +80,6 @@
                                     <label class="form-label">Especialista</label>
                                     <select id="profesional" class="form-select" required>
                                         <option value="">Seleccione un médico</option>
-                                        <option value="Dr. Arrieta - Cardiología">Dr. Arrieta - Cardiología</option>
-                                        <option value="Dra. Casas - Pediatría">Dra. Casas - Pediatría</option>
                                     </select>
                                 </div>
 
@@ -101,20 +99,8 @@
                                 <div class="mb-4">
                                     <label class="form-label">Tipo de Servicio</label>
                                     <select id="servicio" class="form-select">
-                                        <option value="Medicina General">Medicina General</option>
-                                        <option value="Odontología">Odontología</option>
-                                        <option value="Psicología">Psicología</option>
+                                        <option value="">Seleccione un servicio</option>
                                     </select>
-                                </div>
-
-                                <div class="mb-4 p-3 border rounded bg-light">
-                                    <label class="form-label d-block">Validación de Pago</label>
-                                    <button type="button" class="btn btn-outline-success w-100" onclick="simularPago()">
-                                        <i class="bi bi-credit-card"></i> Registrar Pago
-                                    </button>
-                                    <p id="estadoPago" class="text-success fw-bold mt-2 d-none text-center">
-                                        <i class="bi bi-check-circle-fill"></i> Pago Validado
-                                    </p>
                                 </div>
 
                                 <div class="d-grid">
@@ -147,10 +133,10 @@
                             </div>
                             <div class="d-grid gap-2">
                                 <button class="btn btn-success" onclick="finalizarProceso('Confirmar')">
-                                    <i class="bi bi-check-lg"></i> Confirmar Cita
+                                    <i class="bi bi-check-lg"></i> Confirmar
                                 </button>
                                 <button class="btn btn-danger" onclick="finalizarProceso('Cancelar')">
-                                    <i class="bi bi-x-lg"></i> Cancelar Cita
+                                    <i class="bi bi-x-lg"></i> Cancelar
                                 </button>
                             </div>
                         </div>
@@ -166,7 +152,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="../JS/confirmaciondecitas.js"></script>
-    <script src="/frontend/js/seguridad.js"></script>
+    <script src="/frontend/JS/confirmaciondecitas.js"></script>
+    <script src="/frontend/JS/seguridad.js"></script>
 </body>
 </html>

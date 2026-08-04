@@ -12,6 +12,9 @@ from backend.services.atencion_service import (
     obtener_atencion_por_id,
     obtener_atencion_por_numero_documento
 )
+
+from backend.services.atencion_service import obtener_documento_para_laboratorio
+
 from fastapi import HTTPException
 
 router = APIRouter(
@@ -47,3 +50,19 @@ def buscar_por_documento(
 @router.get("/{id_atencion}", response_model=AtencionMedicaResponse)
 def obtener(id_atencion: int, db: Session = Depends(get_db)):
     return obtener_atencion_por_id(db, id_atencion)
+
+@router.get("/laboratorio/{numero_documento}/")
+def obtener_datos(
+    numero_documento: str,
+    db: Session = Depends(get_db)
+):
+    
+    datos = obtener_documento_para_laboratorio(db, numero_documento)
+    
+    if datos is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Atención médica no encontrada para este documento"
+        )
+        
+    return datos

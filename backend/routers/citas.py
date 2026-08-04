@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from backend.database.dependencies import get_db
 from backend.schemas.cita_shema import CitaCreate, CItaResponse
-from backend.services.cita_service import crear_cita, obtener_cita, obtener_cita_por_id, actualizar_cita, eliminar_cita
+from backend.services.cita_service import crear_cita, obtener_cita, obtener_cita_por_id, obtener_cita_por_documento, actualizar_cita, eliminar_cita
+from backend.services.cita_service import obtener_paciente_para_atencion
 from typing import List
 
 router = APIRouter(
@@ -33,6 +34,35 @@ def buscar_cita(id_cita: int, db: Session = Depends(get_db)):
     
     return cita
 
+@router.get("/{numero_documento_paciente}/documento", response_model = CItaResponse)
+def obtener_documento(numero_documento_paciente: int, db: Session = Depends(get_db)):
+    documento = obtener_cita_por_documento(db, numero_documento_paciente)
+    
+    if documento is None:
+        raise HTTPException(
+            status_code = 404,
+            detail = "No existe la cita con ese numero de documento"
+        )
+    
+    return documento
+
+@router.get("/paciente/{numero_documento_paciente}")
+def obtener_paciente_atencion(
+    numero_documento_paciente: str,
+    db: Session = Depends(get_db)
+):
+
+    paciente = obtener_paciente_para_atencion(db, numero_documento_paciente)
+    
+    if paciente is None:
+        raise HTTPException(
+            status_code = 404,
+            detail = "El paciente no tiene una cita programada"
+        )
+        
+    return paciente
+
+
 @router.put("/{id_cita}", response_model = CItaResponse)
 def actualizar(
     id_cita: int, 
@@ -49,6 +79,7 @@ def actualizar(
         
     return actualizar
         
+
 @router.delete("/{id_cita}", response_model = CItaResponse)
 def eliminar(
     id_cita: int,

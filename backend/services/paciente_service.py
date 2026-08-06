@@ -1,6 +1,26 @@
 from sqlalchemy.orm import Session
 from backend.models.paciente import Paciente
 from backend.schemas.paciente_shema import PacienteCreate
+from backend.models.usuario import Usuario
+
+# importacion para crear contraseñas aleatorias
+import secrets
+import string
+
+def generar_contraseña(longitud: int = 10):
+    
+    caracteres = (
+        string.ascii_letters +
+        string.digits +
+        "!@#$%&*"
+    )
+    
+    contraseña = "".join(
+        secrets.choice(caracteres)
+        for _ in range(longitud)
+    )
+    
+    return contraseña
 
 def crear_paciente(db: Session, paciente: PacienteCreate):
 
@@ -14,7 +34,23 @@ def crear_paciente(db: Session, paciente: PacienteCreate):
         telefono = paciente.telefono
     )
 
+    # se agrega al usuario al que se le ha creado el paciente
     db.add(nuevo_paciente)
+    
+    # contraseña aleatoria
+    contraseña_generada = generar_contraseña()
+    
+    # se crea automaticamente el usuario al que se le ha creado el paciente
+    nuevo_usuario = Usuario(
+        correo = paciente.correo,
+        contraseña = contraseña_generada,
+        rol = 'PACIENTE'
+    )
+    
+    print(contraseña_generada)
+    
+    db.add(nuevo_usuario)
+    # se guarda todo en una sola transicion del usuario creado
     db.commit()
     db.refresh(nuevo_paciente)
 

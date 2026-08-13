@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from backend.models.laboratorio import Laboratorio
 from backend.schemas.laboratorio_shema import LaboratorioCreate
+from backend.models.resultado import Resultado
 
 def crear_laboratorio(db: Session, laboratorio: LaboratorioCreate):
     
@@ -19,6 +20,14 @@ def crear_laboratorio(db: Session, laboratorio: LaboratorioCreate):
 
 def obtener_laboratorios(db: Session):
     return db.query(Laboratorio).all()
+
+def obtener_laboratorios_pendientes(db: Session):
+    return db.query(Laboratorio).outerjoin(
+        Resultado,
+        Laboratorio.id_lab == Resultado.id_lab
+    ).filter(
+        Resultado.id_resultado == None
+    ).all()
 
 def obtener_laboratorio_por_id(db: Session, id_lab: int):
     return db.query(Laboratorio).filter(

@@ -21,6 +21,10 @@ def crear(
 def listar_resultados(db: Session = Depends(get_db)):
     return obtener_resultados(db)
 
+@router.get("/registrados", response_model = List[ResultadoResponse])
+def listar_resultados_registrados(db: Session = Depends(get_db)):
+    return obtener_resultados(db)
+
 @router.get("/{id_resultado}", response_model = ResultadoResponse)
 def buscar_resultado(
     id_resultado: int, 

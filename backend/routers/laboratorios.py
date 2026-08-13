@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from backend.database.dependencies import get_db
 from backend.schemas.laboratorio_shema import LaboratorioCreate, LaboratorioResponse
-from backend.services.laboratorio_service import crear_laboratorio, obtener_laboratorios, obtener_laboratorio_por_id, actualizar_laboratorio, eliminar_laboratorio, obtener_laboratorio_por_numero_documento
+from backend.services.laboratorio_service import crear_laboratorio, obtener_laboratorios, obtener_laboratorio_por_id, actualizar_laboratorio, eliminar_laboratorio, obtener_laboratorio_por_numero_documento, obtener_laboratorios_pendientes
 from typing import List
 
 router = APIRouter(
@@ -35,6 +35,12 @@ def buscar_por_documento(
         )
 
     return laboratorio
+
+# crear una api que nos devuelva los laboratorios para /pendiente-resultados
+
+@router.get("/pendiente-resultados", response_model = List[LaboratorioResponse])
+def listar_laboratorios_pendientes(db: Session = Depends(get_db)):
+    return obtener_laboratorios_pendientes(db)
 
 @router.get("/{id_lab}", response_model = LaboratorioResponse)
 def buscar_laboratorio(id_lab: int, db: Session = Depends(get_db)):

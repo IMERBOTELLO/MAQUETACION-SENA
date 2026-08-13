@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/frontend/estilos/resultados.css">
+    <link rel="stylesheet" href="/frontend/estilos/resultado.css">
 </head>
 <body>
 
@@ -66,7 +66,7 @@
                 <div class="row g-3">
                     <div class="col-md-3">
                         <label class="form-label fw-semibold">Documento Paciente *</label>
-                        <input type="text" class="form-control" id="docPaciente" required placeholder="Ej: 12345678">
+                        <input type="text" class="form-control" id="docPaciente" onblur="cargarDatosLaboratorio()" required placeholder="Ej: 12345678">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label fw-semibold">Nombre Paciente *</label>
@@ -150,23 +150,6 @@
                                     </thead>
                                     <tbody id="validadosBody">
                                         <tr><td colspan="4" class="text-muted">No hay resultados validados</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card bg-light border-0">
-                        <div class="card-body">
-                            <h6><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Resultados Rechazados (Incompletos)</h6>
-                            <div class="table-responsive mt-2">
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr><th>Paciente</th><th>Motivo de rechazo</th><th>Acción</th></tr>
-                                    </thead>
-                                    <tbody id="rechazadosBody">
-                                        <tr><td colspan="3" class="text-muted">No hay resultados rechazados</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -274,6 +257,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/frontend/JS/resultados.js"></script>
-    <script src="/frontend/js/seguridad.js"></script>
+    <script src="/frontend/JS/seguridad.js"></script>
 </body>
 </html>

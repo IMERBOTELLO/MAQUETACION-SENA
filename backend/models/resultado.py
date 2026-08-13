@@ -7,7 +7,7 @@ class Resultado(Base):
     
     id_resultado = Column(Integer, primary_key = True, autoincrement = True)
     id_lab = Column(Integer, ForeignKey('LABORATORIO.id_lab'), nullable = False)
-    documento_paciente = Column(Integer, nullable = False)
+    documento_paciente = Column(String(30), nullable = False)
     nombre_paciente = Column(String(120), nullable = False)
     examen_medico = Column(
         Enum(

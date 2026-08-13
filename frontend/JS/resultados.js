@@ -81,39 +81,52 @@ async function registrarResultado() {
         return;
     }
     
-    // Verificar si los valores del examen están completos
-    const tieneValores = valores && valores.trim() !== '';
-    
-    const nuevoResultado = {
-        id: nextId++,
-        documento: documento,
-        nombre: nombre,
-        examen: examen,
-        fecha: fecha,
-        valores: valores || 'Sin valores registrados'
-    };
-    
-    // Validación automática según si hay valores completos
-    if(tieneValores) {
-        // Si tiene valores completos, va directamente a validados
-        resultadosValidados.push({
-            id: nuevoResultado.id,
-            documento: documento,
-            nombre: nombre,
-            examen: examen,
-            fecha: fecha,
-            valores: valores,
-            validadoPor: 'Sistema - Validación automática'
-        });
-        mostrarModal('✅ Validación automática exitosa', 'El resultado ha sido validado automáticamente porque los valores del examen están completos. Ya está disponible para que el médico lo revise.');
-    } else {
-        // Si faltan valores, va a pendientes de validación
-        resultadosPendientes.push(nuevoResultado);
-        mostrarModal('📋 Resultado registrado', 'El resultado ha sido registrado pero está PENDIENTE DE VALIDACIÓN porque faltan los valores del examen. Complete los valores para que pase la validación automática.');
-    }
+    alert('✅ Resultado registrado exitosamente');
     
     limpiarFormularioResultado();
-    renderizarTodo();
+
+    await cargarResultadosDesdeBD();
+}
+
+// cargar datos del paciente
+
+async function cargarDatosLaboratorio() {
+
+    const documento = document.getElementById('docPaciente').value;
+
+    if (!documento) {
+        return;
+    }
+
+    try {
+
+        const respuesta = await fetch(
+            `http://127.0.0.1:8000/laboratorios/documento/${documento}`
+        );
+
+        if (!respuesta.ok) {
+            alert('❌ Error: No se pudo obtener el laboratorio para este documento');
+
+            document.getElementById('nombrePaciente').value = '';
+            document.getElementById('tipoExamen').value = '';
+            document.getElementById('fechaResultado').value = '';
+            document.getElementById('valoresExamen').value = '';
+
+            return;
+        }
+
+        const laboratorio = await respuesta.json();
+
+        document.getElementById('nombrePaciente').value = laboratorio.nombre_paciente;
+        document.getElementById('tipoExamen').value = laboratorio.tipo_examen;
+        document.getElementById('fechaResultado').value = laboratorio.fecha;
+        document.getElementById('valoresExamen').value = laboratorio.resultado;
+
+    } catch (error) {
+
+        console.error(error);
+        alert("Error al consultar el laboratorio");
+    }
 }
 
 // RF09: Generar entrega de resultados
@@ -249,82 +262,163 @@ function cerrarPrevisualizacion() {
 function renderizarTodo() {
     renderizarPendientes();
     renderizarValidados();
-    renderizarRechazados();
-    renderizarHistorialEntregas();
+}
+
+async function cargarResultadosDesdeBD() {
+
+    try {
+        // Obtener resultados pendientes
+
+        const respuestaPendientes = await fetch(
+            `http://127.0.0.1:8000/laboratorios/pendiente-resultados`
+        );
+
+        if (!respuestaPendientes.ok) {
+            throw new Error('Error al obtener resultados pendientes');
+        }
+
+        const pendientes = await respuestaPendientes.json();
+
+        // Obtener resultados validados
+
+        const respuestaValidados = await fetch(
+            `http://127.0.0.1:8000/resultados/registrados`
+        );
+
+        if (!respuestaValidados.ok) {
+            throw new Error('Error al obtener resultados validados');
+        }
+
+        const validados = await respuestaValidados.json();
+
+        // guardar los datos
+
+        resultadosPendientes = pendientes.map(laboratorio => ({
+            id: laboratorio.id_lab,
+            documento: laboratorio.numero_documento,
+            nombre: laboratorio.nombre_paciente,
+            examen: laboratorio.tipo_examen,
+            fecha: laboratorio.fecha,
+            valores: laboratorio.resultado
+        }));
+
+        resultadosValidados = validados.map(resultado => ({
+            id: resultado.id_resultado,
+            documento: resultado.documento_paciente,
+            nombre: resultado.nombre_paciente,
+            examen: resultado.examen_medico,
+            fecha: resultado.fecha_resultado,
+            valores: resultado.info_examen
+        }));
+
+    
+
+    // mostrar en la interfaz
+
+    renderizarPendientes();
+    renderizarValidados();
+
+    } catch (error) {
+
+        console.error('Error cargando resultados:', error);
+    }
 }
 
 function renderizarPendientes() {
+
     const tbody = document.getElementById('pendientesBody');
+
     if(resultadosPendientes.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No hay resultados pendientes</td></tr>';
-        return;
-    }
-    tbody.innerHTML = '';
-    resultadosPendientes.forEach(r => {
-        tbody.innerHTML += `
+
+        tbody.innerHTML = `
             <tr>
-                <td><i class="bi bi-person-circle me-2 text-primary"></i>${r.nombre}</td>
-                <td>${r.documento}</td>
-                <td>${r.examen}</td>
-                <td>${r.fecha}</td>
-                <td><span class="badge-status badge-pendiente">Pendiente</span></td>
-                <td><button class="btn btn-sm btn-primary rounded-pill" onclick="completarValidacion(${r.id})"><i class="bi bi-pencil-square"></i> Completar valores</button></td>
+                <td colspan="6" class="text-center text-muted">
+                    No hay resultados pendientes
+                </td>
             </tr>
         `;
-    });
-}
 
-function completarValidacion(id) {
-    const resultado = resultadosPendientes.find(r => r.id === id);
-    if(resultado) {
-        document.getElementById('docPaciente').value = resultado.documento;
-        document.getElementById('nombrePaciente').value = resultado.nombre;
-        document.getElementById('tipoExamen').value = resultado.examen;
-        document.getElementById('fechaResultado').value = resultado.fecha;
-        document.getElementById('valoresExamen').value = resultado.valores !== 'Sin valores registrados' ? resultado.valores : '';
-        
-        resultadosPendientes = resultadosPendientes.filter(r => r.id !== id);
-        renderizarTodo();
-        
-        document.getElementById('formRegistroResultado').scrollIntoView({ behavior: 'smooth' });
-        alert(`Complete los valores del examen para ${resultado.nombre} y presione "Registrar Resultado" nuevamente.`);
+        return;
     }
+
+    tbody.innerHTML = '';
+
+    resultadosPendientes.forEach(r => {
+
+        tbody.innerHTML += `
+            <tr>
+                <td>
+                    <i class="bi bi-person-circle me-2 text-primary"></i>
+                    ${r.nombre}
+                </td>
+
+                <td>${r.documento}</td>
+
+                <td>${r.examen}</td>
+
+                <td>${r.fecha}</td>
+
+                <td>
+                    <span class="badge bg-warning text-dark">
+                        Pendiente
+                    </span>
+                </td>
+
+                <td>
+                    <span class="text-muted">
+                        Pendiente de registrar resultado
+                    </span>
+                </td>
+            </tr>
+        `;
+
+    });
 }
 
 function renderizarValidados() {
-    const tbody = document.getElementById('validadosBody');
-    if(resultadosValidados.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="text-muted">No hay resultados validados</td></tr>';
-        return;
-    }
-    tbody.innerHTML = '';
-    resultadosValidados.forEach(r => {
-        tbody.innerHTML += `
-            <tr>
-                <td>${r.nombre}<br><small class="text-muted">${r.examen}</small></td>
-                <td>${r.fecha}</td>
-                <td><span class="badge bg-success">${r.validadoPor}</span></td>
-                <td><span class="badge badge-completado">Completo</span></td>
-            </tr>
-        `;
-    });
-}
 
-function renderizarRechazados() {
-    const tbody = document.getElementById('rechazadosBody');
-    if(resultadosRechazados.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" class="text-muted">No hay resultados rechazados</td></tr>';
-        return;
-    }
-    tbody.innerHTML = '';
-    resultadosRechazados.forEach(r => {
-        tbody.innerHTML += `
+    const tbody = document.getElementById('validadosBody');
+
+    if(resultadosValidados.length === 0) {
+
+        tbody.innerHTML = `
             <tr>
-                <td>${r.nombre}<br><small>${r.examen}</small></td>
-                <td><span class="badge bg-danger">${r.motivo}</span></td>
-                <td><button class="btn btn-sm btn-outline-warning rounded-pill" onclick="reintentarRegistro(${r.id})">Reintentar</button></td>
+                <td colspan="4" class="text-center text-muted">
+                    No hay resultados validados
+                </td>
             </tr>
         `;
+
+        return;
+    }
+
+    tbody.innerHTML = '';
+
+    resultadosValidados.forEach(r => {
+
+        tbody.innerHTML += `
+            <tr>
+                <td>
+                    ${r.nombre}
+                </td>
+
+                <td>
+                    ${r.examen}
+                </td>
+
+                <td>
+                    Registro de resultado
+                </td>
+
+                <td>
+                    <span class="badge bg-success">
+                        Validado
+                    </span>
+                </td>
+
+                </tr>
+        `;
+
     });
 }
 
@@ -417,7 +511,6 @@ function mostrarModal(titulo, mensaje) {
     modal.show();
 }
 
-renderizarTodo();
 
 function convertFileToBase64(archivo) {
     return new Promise((resolve, reject) => {
@@ -435,3 +528,9 @@ function convertFileToBase64(archivo) {
     });
 
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    cargarResultadosDesdeBD();
+
+});

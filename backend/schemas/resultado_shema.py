@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from enum import Enum
 from datetime import date
+import base64
 
 # crear resultado
 class examen_medico(str, Enum):
@@ -36,3 +37,13 @@ class ResultadoResponse(BaseModel):
     
     class Config:
         from_attributes = True
+        
+class  EntregaResultadoResponse(BaseModel):
+    documento: int
+    nombre_paciente: str
+    correo: str
+    id_resultado: int
+    
+    class config:
+        from_attributes = True
+    

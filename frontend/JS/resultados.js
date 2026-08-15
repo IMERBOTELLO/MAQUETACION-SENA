@@ -4,6 +4,8 @@ let resultadosValidados = [];
 let resultadosRechazados = [];
 let entregasRealizadas = [];
 let nextId = 1;
+let pdfResultado = "";
+let idResultadoEntrega = null;
 
 // Función para registrar resultado (RF06)
 async function registrarResultado() {
@@ -130,13 +132,15 @@ async function cargarDatosLaboratorio() {
 }
 
 // RF09: Generar entrega de resultados
-function generarEntregaResultados() {
+async function generarEntregaResultados() {
     const documento = document.getElementById('entregaDocumento').value;
     const formato = document.getElementById('formatoEntrega').value;
     const correo = document.getElementById('correoEntrega').value;
     const diagnostico = document.getElementById('diagnosticoFinal').value;
     const incluirResultados = document.getElementById('incluirResultados').checked;
+    const idResultadoEntrega = document.getElementById('idResultadoEntrega').value;
     
+
     if(!documento) {
         alert('Por favor ingrese el documento del paciente');
         return;
@@ -146,6 +150,45 @@ function generarEntregaResultados() {
         alert('Para entrega en formato digital, debe proporcionar un correo electrónico');
         return;
     }
+
+    if(!idResultadoEntrega) {
+        alert('No se ha generado un resumen de resultados. Primero genere el resumen.');
+        return;
+    }
+
+    try {
+
+        const respuesta = await fetch(
+            `http://127.0.0.1:8000/resultados/enviar-correo/${idResultadoEntrega}`,
+            {
+                method: 'POST',
+            }
+        );
+
+        const datos = await respuesta.json();
+
+        if (!respuesta.ok) {
+            alert(`❌ Error: ${datos.detail}`);
+            return;
+        }
+        const nombrePaciente = document.getElementById('entregaNombre').value;
+        const correoPaciente = datos.correo;
+
+        alert(
+            `✅ Correo enviado correctamente\n\n` +
+            `Paciente: ${nombrePaciente}\n` +
+            `Documento: ${documento}\n` +
+            `Correo: ${correoPaciente}\n`
+        );
+    
+    } catch (error) {
+
+        console.error("Error enviando resultados:", error);
+        
+        alert("Error al enviar correo");
+
+    }
+
     
     // Buscar resultados del paciente
     const resultadosPaciente = [...resultadosValidados, ...resultadosPendientes].filter(r => r.documento === documento);
@@ -219,44 +262,26 @@ function cargarDatosPaciente() {
 }
 
 function previsualizarResumen() {
-    const documento = document.getElementById('entregaDocumento').value;
-    const nombre = document.getElementById('entregaNombre').value;
-    const diagnostico = document.getElementById('diagnosticoFinal').value;
-    const incluirResultados = document.getElementById('incluirResultados').checked;
     
-    if(!documento) {
-        alert('Ingrese documento del paciente primero');
+    if(!pdfResultado) {
+        alert('No se encontró el pdf para este paciente. Primero valide el resultado.');
         return;
     }
     
-    const resultadosPaciente = [...resultadosValidados, ...resultadosPendientes].filter(r => r.documento === documento);
-    
-    let contenido = `<h6>Paciente: ${nombre || 'No especificado'}</h6>`;
-    contenido += `<p><strong>Documento:</strong> ${documento}</p>`;
-    contenido += `<p><strong>Diagnóstico Final:</strong> ${diagnostico || 'Pendiente de actualización'}</p>`;
-    
-    if(incluirResultados && resultadosPaciente.length > 0) {
-        contenido += `<hr><h6>Resultados de Laboratorio:</h6>`;
-        resultadosPaciente.forEach(r => {
-            contenido += `<div class="mb-2"><strong>${r.examen} (${r.fecha}):</strong><br>${r.valores || 'Resultados disponibles en PDF adjunto'}</div>`;
-        });
-    } else if(incluirResultados && resultadosPaciente.length === 0) {
-        contenido += `<p class="text-warning">No hay resultados registrados para este paciente.</p>`;
-    }
-    
-    contenido += `<hr><small class="text-muted">Documento generado por HOSPISOFT - Sistema de Gestión Hospitalaria</small>`;
-    
-    document.getElementById('vistaPreviaContenido').innerHTML = contenido;
     document.getElementById('vistaPrevia').classList.remove('d-none');
-    
-    setTimeout(() => {
-        document.getElementById('vistaPrevia').scrollIntoView({ behavior: 'smooth' });
-    }, 100);
+
+    const visor = document.getElementById('visorPDF');
+
+    visor.src = pdfResultado;
+
+    visor.scrollIntoView({ 
+        behavior: "smooth" 
+    });
 }
 
 function cerrarPrevisualizacion() {
     document.getElementById('vistaPrevia').classList.add('d-none');
-    document.getElementById('vistaPreviaContenido').innerHTML = '';
+    document.getElementById('visorPDF').src = '';
 }
 
 function renderizarTodo() {
@@ -323,6 +348,52 @@ async function cargarResultadosDesdeBD() {
         console.error('Error cargando resultados:', error);
     }
 }
+
+async function cargarDatosEntrega() {
+
+    const documento = document.getElementById('entregaDocumento').value.trim();
+
+    if (!documento) {
+        return;
+    }
+
+    try {
+
+        const respuestaEntrega = await fetch(
+            `http://127.0.0.1:8000/resultados/entrega/${documento}`
+        );
+
+        if (!respuestaEntrega.ok) {
+            const error = await respuesta.json();
+            alert(error.detail);
+            
+            document.getElementById('entregaDocumento').value = '';
+            document.getElementById('entregaNombre').value = '';
+            document.getElementById('correoEntrega').value = '';
+
+            return;
+        }
+
+        const datos = await respuestaEntrega.json();
+
+        document.getElementById('entregaNombre').value = datos.nombre_paciente;
+        document.getElementById('correoEntrega').value = datos.correo;
+        document.getElementById('idResultadoEntrega').value = datos.id_resultado;
+
+        pdfResultado = `http://127.0.0.1:8000/resultados/pdf/${datos.id_resultado}`;
+
+        idResultadoEntrega = datos.id_resultado;
+
+        console.log("PDF", pdfResultado);
+        console.log("ID resultado", idResultadoEntrega);
+
+    } catch (error) {
+
+        console.error(error);
+    
+    }
+}
+
 
 function renderizarPendientes() {
 
@@ -527,6 +598,22 @@ function convertFileToBase64(archivo) {
         lector.readAsDataURL(archivo);
     });
 
+}
+
+function base64ToBlob(base64, tipo) {
+
+    const bytes = atob(base64);
+
+    const arreglo = new Uint8Array(bytes.length);
+
+    for (let i = 0; i < bytes.length; i++) {
+        arreglo[i] = bytes.charCodeAt(i);
+
+    }
+
+    return new Blob([arreglo], {
+        type: tipo
+    })
 }
 
 document.addEventListener('DOMContentLoaded', function() {

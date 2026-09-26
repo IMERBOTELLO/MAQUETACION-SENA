@@ -15,13 +15,13 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 SET @MYSQLDUMP_TEMP_LOG_BIN = @@SESSION.SQL_LOG_BIN;
-SET @@SESSION.SQL_LOG_BIN= 0;
+
 
 --
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'bd294991-1195-11f1-96a4-9c6b00aced05:1-518';
+
 
 --
 -- Table structure for table `atencion_medica`
@@ -271,7 +271,7 @@ LOCK TABLES `usuario` WRITE;
 INSERT INTO `usuario` VALUES (4,'imerbotello@gmail.com','1365645','ADMINISTRADOR'),(5,'camilobotello@gmail.com','134','PACIENTE'),(6,'liliana@gmail.com','134','RECEPCIONISTA'),(9,'imerantonio@gmail.com','12345','LABORATORIO'),(10,'imerpaez@gmail.com','12345','MEDICO'),(12,'andrezpaez@gmail.com','G9LrGEgsUT','PACIENTE'),(15,'botelloimer0@gmail.com','8z@5*x!V*5','PACIENTE'),(16,'imerantoniobotellopaez@gmail.com','n!oUoA8Sih','PACIENTE'),(21,'imerbotello0@gmail.com','yLfrQ&7P@g','PACIENTE'),(23,'diegolobo@gmail.com','wg3%T$1pFV','PACIENTE');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
-SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

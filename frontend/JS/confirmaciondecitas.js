@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // ==========================================
 
             const respuesta = await fetch(
-                `http://127.0.0.1:8000/citas/${documento}/documento`
+                `/citas/${documento}/documento`
             );
 
             if (!respuesta.ok) {
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // ==========================================
 
             const respuestaMedico = await fetch(
-                "http://127.0.0.1:8000/medicos/"
+                "/medicos/"
             );
 
             if (!respuestaMedico.ok) {
@@ -237,7 +237,7 @@ async function finalizarProceso(accion) {
 
     try {
         const respuesta = await fetch(
-            "http://127.0.0.1:8000/citas_programadas/",
+            "/citas_programadas/",
             {
                 method: "POST",
                 headers: {

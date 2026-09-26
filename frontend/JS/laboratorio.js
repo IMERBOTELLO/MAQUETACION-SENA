@@ -13,7 +13,7 @@ async function buscarPaciente() {
 
     try {
         const respuesta = await fetch(
-            `http://127.0.0.1:8000/atenciones_medicas/laboratorio/${numero_documento}`
+            `/atenciones_medicas/laboratorio/${numero_documento}`
         );
 
         if (!respuesta.ok) {
@@ -60,7 +60,7 @@ async function guardarLaboratorio(event) {
 
 
     const respuesta = await fetch(
-        "http://127.0.0.1:8000/laboratorios/",
+        "/laboratorios/",
         {
             method: "POST",
 

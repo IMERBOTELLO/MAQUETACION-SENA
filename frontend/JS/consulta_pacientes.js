@@ -19,7 +19,7 @@ buscador.addEventListener("input", () => {
     });
 });
 
-fetch("http://127.0.0.1:8000/pacientes/")
+fetch("/pacientes/")
 .then(async response => {
 
     const data = await response.json();
@@ -81,7 +81,7 @@ document.addEventListener("click", function(event) {
 
         if (confirm("¿Está seguro de que desea eliminar este paciente?")) {
             
-            fetch("http://127.0.0.1:8000/pacientes/" + dataId, {
+            fetch("/pacientes/" + dataId, {
 
                 method: "DELETE",
 

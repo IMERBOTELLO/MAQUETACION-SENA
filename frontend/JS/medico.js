@@ -9,7 +9,7 @@ document.getElementById("buscarBtn").addEventListener("click", async function ()
 
     try {
 
-        const respuesta = await fetch(`http://127.0.0.1:8000/citas/paciente/${documento}`);
+        const respuesta = await fetch(`/citas/paciente/${documento}`);
 
         if (!respuesta.ok) {
             throw new Error("Paciente no encontrado o no tiene cita programada");
@@ -71,7 +71,7 @@ document.getElementById("guardarBtn").addEventListener("click", async function (
 
     try {
 
-        const respuesta = await fetch("http://127.0.0.1:8000/atenciones_medicas/", {
+        const respuesta = await fetch("/atenciones_medicas/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

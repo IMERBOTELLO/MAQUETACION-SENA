@@ -25,7 +25,7 @@ async function registrarResultado() {
     const pdfBase64 = await convertFileToBase64(archivo);
 
     const respuestaLaboratorio = await fetch(
-        `http://127.0.0.1:8000/laboratorios/documento/${documento}`
+        `/laboratorios/documento/${documento}`
     );
 
     if (!respuestaLaboratorio.ok) {
@@ -36,7 +36,7 @@ async function registrarResultado() {
     const laboratorio = await respuestaLaboratorio.json();
 
     const respuestaAtencion = await fetch(
-        `http://127.0.0.1:8000/atenciones_medicas/documento/${documento}`
+        `/atenciones_medicas/documento/${documento}`
     );
 
     if (!respuestaAtencion.ok) {
@@ -58,7 +58,7 @@ async function registrarResultado() {
     };
 
     const respuesta = await fetch(
-        `http://127.0.0.1:8000/resultados/`,
+        `/resultados/`,
         {
             method: 'POST',
             headers: {
@@ -103,7 +103,7 @@ async function cargarDatosLaboratorio() {
     try {
 
         const respuesta = await fetch(
-            `http://127.0.0.1:8000/laboratorios/documento/${documento}`
+            `/laboratorios/documento/${documento}`
         );
 
         if (!respuesta.ok) {
@@ -159,7 +159,7 @@ async function generarEntregaResultados() {
     try {
 
         const respuesta = await fetch(
-            `http://127.0.0.1:8000/resultados/enviar-correo/${idResultadoEntrega}`,
+            `/resultados/enviar-correo/${idResultadoEntrega}`,
             {
                 method: 'POST',
             }
@@ -295,7 +295,7 @@ async function cargarResultadosDesdeBD() {
         // Obtener resultados pendientes
 
         const respuestaPendientes = await fetch(
-            `http://127.0.0.1:8000/laboratorios/pendiente-resultados`
+            `/laboratorios/pendiente-resultados`
         );
 
         if (!respuestaPendientes.ok) {
@@ -307,7 +307,7 @@ async function cargarResultadosDesdeBD() {
         // Obtener resultados validados
 
         const respuestaValidados = await fetch(
-            `http://127.0.0.1:8000/resultados/registrados`
+            `/resultados/registrados`
         );
 
         if (!respuestaValidados.ok) {
@@ -360,7 +360,7 @@ async function cargarDatosEntrega() {
     try {
 
         const respuestaEntrega = await fetch(
-            `http://127.0.0.1:8000/resultados/entrega/${documento}`
+            `/resultados/entrega/${documento}`
         );
 
         if (!respuestaEntrega.ok) {
@@ -380,7 +380,7 @@ async function cargarDatosEntrega() {
         document.getElementById('correoEntrega').value = datos.correo;
         document.getElementById('idResultadoEntrega').value = datos.id_resultado;
 
-        pdfResultado = `http://127.0.0.1:8000/resultados/pdf/${datos.id_resultado}`;
+        pdfResultado = `/resultados/pdf/${datos.id_resultado}`;
 
         idResultadoEntrega = datos.id_resultado;
 

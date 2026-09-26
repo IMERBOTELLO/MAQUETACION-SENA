@@ -34,12 +34,12 @@ formulario.addEventListener("submit", function (event) {
 
     };
 
-    let url = "http://127.0.0.1:8000/pacientes/";
+    let url = "/pacientes/";
     let metodo = "POST";
 
     // Si viene un id, significa que estamos editando
     if (idPaciente) {
-        url = `http://127.0.0.1:8000/pacientes/${idPaciente}`;
+        url = `/pacientes/${idPaciente}`;
         metodo = "PUT";
     }
 
@@ -101,7 +101,7 @@ const telefono = document.getElementById("telefono");
 
 if (idPaciente) {
 
-    fetch(`http://127.0.0.1:8000/pacientes/${idPaciente}`)
+    fetch(`/pacientes/${idPaciente}`)
 
     .then(async response => {
 

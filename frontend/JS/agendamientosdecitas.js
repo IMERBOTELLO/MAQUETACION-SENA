@@ -4,7 +4,7 @@ async function cargarMedicos() {
 
   try {
 
-    const respuesta = await fetch("http://127.0.0.1:8000/medicos/");
+    const respuesta = await fetch("/medicos/");
 
     if (!respuesta.ok) {
       throw new Error("No se puediron cargar los medicos");
@@ -47,7 +47,7 @@ async function buscarPaciente() {
   try {
 
     const respuesta = await fetch (
-      `http://127.0.0.1:8000/pacientes/documento/${documento}`
+      `/pacientes/documento/${documento}`
     );
 
     if (!respuesta.ok) {
@@ -95,7 +95,7 @@ document.getElementById("formCita").addEventListener("submit", async function(e)
 
   try {
     const respuesta = await fetch(
-      "http://127.0.0.1:8000/citas/",
+      "/citas/",
       {
         method: "POST",
         headers: {

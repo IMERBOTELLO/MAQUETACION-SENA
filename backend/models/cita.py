@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Date, Enum, Time, ForeignKey
 from backend.database.base import Base
 
 class Cita(Base):
-    __tablename__ = 'CITA'
+    __tablename__ = 'cita'
     
     id_cita = Column(Integer, primary_key = True, autoincrement = True)
     nombre_paciente = Column(String(100), nullable = False)

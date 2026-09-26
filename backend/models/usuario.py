@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Enum
 from backend.database.base import Base
 
 class Usuario(Base):
-    __tablename__ = 'USUARIO'
+    __tablename__ = 'usuario'
     
     id_usuario = Column(Integer, primary_key = True, autoincrement = True)
     correo = Column(String(150), unique = True, nullable = False)

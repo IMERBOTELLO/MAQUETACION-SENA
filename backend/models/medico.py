@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String
 from backend.database.base import Base
 
 class Medico(Base):
-    __tablename__ = "MEDICO"
+    __tablename__ = "medico"
 
     id_medico = Column("ID_MEDICO", Integer, primary_key=True, autoincrement=True)
     nombre_medico = Column("NOMBRE_MEDICO", String(100), nullable=False)

@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Date, Enum, ForeignKey
 from backend.database.base import Base
 
 class Laboratorio(Base):
-    __tablename__ = 'LABORATORIO'    
+    __tablename__ = 'laboratorio'
     
     id_lab =    Column(Integer, ForeignKey('atencion_medica.ID_ATENCION'), primary_key=True, autoincrement=True)
     nombre_paciente = Column(String(100), nullable = False)

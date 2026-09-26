@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Date, Time, ForeignKey, UniqueCo
 from backend.database.base import Base
 
 class CitaProgramadas(Base):
-    __tablename__ = 'CITAS_PROGRAMADAS'
+    __tablename__ = 'citas_programadas'
     
     id_citas_programadas = Column(Integer, primary_key = True, autoincrement = True)
     documento = Column(String(15), ForeignKey('CITA.numero_documento_paciente'), nullable = False)

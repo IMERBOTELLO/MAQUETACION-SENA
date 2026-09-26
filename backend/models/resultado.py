@@ -3,7 +3,7 @@ from backend.database.base import Base
 
 
 class Resultado(Base):
-    __tablename__ = 'RESULTADO'
+    __tablename__ = 'resultado'
     
     id_resultado = Column(Integer, primary_key = True, autoincrement = True)
     id_lab = Column(Integer, ForeignKey('LABORATORIO.id_lab'), nullable = False)

@@ -5,7 +5,7 @@ class CitaProgramadas(Base):
     __tablename__ = 'citas_programadas'
     
     id_citas_programadas = Column(Integer, primary_key = True, autoincrement = True)
-    documento = Column(String(15), ForeignKey('CITA.numero_documento_paciente'), nullable = False)
+    documento = Column(String(15), ForeignKey('cita.numero_documento_paciente'), nullable = False)
     nombre_paciente = Column(String(100), nullable = False)
     especialista = Column(String(100), nullable = False)
     fecha = Column(Date, nullable = False)

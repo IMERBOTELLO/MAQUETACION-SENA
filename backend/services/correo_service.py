@@ -1,146 +1,127 @@
-from smtplib import SMTP_SSL
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from email.mime.application import MIMEApplication
-import base64
+import os
+import resend
+import logging
 
-def enviar_correo(destinatario, nombre, contraseña):
+logger = logging.getLogger(__name__)
 
-    try:
-        
-        correo_emisor = "hospisfot@gmail.com"
-        contraseña_emisor = "kvem rnvo sfnt xkbb"
-        
-        asunto = "Bienvenido a HOSPISOFT"
-        
-        cuerpo = f"""
-    hola {nombre},
+# Configuración desde variables de entorno
+RESEND_API_KEY = os.getenv("re_BJAKUpor_8DdTk6MRyTxM1LMn8TAyat5j")
+FROM_EMAIL = os.getenv("FROM_EMAIL", "hospisfot@gmail.com")
 
-    su cuenta a sido creada logueada correctamente
+if RESEND_API_KEY:
+    resend.api_key = RESEND_API_KEY
 
-    puede ingresar a HOSPISOFT con:
 
-    correo:
-    {destinatario}
-
-    contraseña:
-    {contraseña}
-
-    Le recomendamos entrar a nuestro sistema de atencion
-
-    saludos.
-    Equipo HOSPISOFT
+def enviar_correo(destinatario: str, nombre: str, contraseña: str) -> bool:
     """
+    Envía correo de bienvenida vía Resend API.
+    Returns True si se envió, False si falló (NO lanza excepción).
+    """
+    if not RESEND_API_KEY:
+        logger.warning("RESEND_API_KEY no configurado, omitiendo envío")
+        return False
 
-        mensaje = MIMEMultipart()
-        mensaje['From'] = correo_emisor
-        mensaje['To'] = destinatario
-        mensaje['Subject'] = asunto
-        
-        mensaje.attach(MIMEText(cuerpo, 'plain'))
-        
-        server = SMTP_SSL('smtp.gmail.com', 465, timeout=10)
-        server.login(correo_emisor, contraseña_emisor)
-        
-        server.send_message(mensaje)
-        
-        server.quit()
-        print("Correo enviado exitosamente")
-        
-    except Exception as e:
-        print(f"Error enviando correo: {e}")
-        raise
-    
-    
-def enviar_resultado_correo(destinatario, nombre, documento, pdf):
-    
     try:
-        
-        correo_emisor = "hospisfot@gmail.com"
-        contraseña_emisor = "kvem rnvo sfnt xkbb"
-        
-        
-        # PREPARARA EL PDF EN BASE64
-        if isinstance(pdf, str):
-            
-            # si viene como base64 en texto
-            
-            pdf_bytes = base64.b64decode(pdf)
-            
-        elif isinstance(pdf, bytes):
-            
-            # verificamos si ya son bytes reales en pdf
-            
-            if pdf.startswith(b'%PDF'):
-                
-                pdf_bytes = pdf
-                
-            else:
-                
-                # probablemente son bytes que contiene base64
-                pdf_bytes = base64.b64decode(pdf)
-                
-        else:
-            
-            raise Exception("PDF no reconocido")
-        
-        asunto = "Resultado de examen medico - HOSPISOFT"
-        
-        cuerpo = f"""
+        params = {
+            "from": f"HOSPISOFT <{FROM_EMAIL}>",
+            "to": [destinatario],
+            "subject": "Bienvenido a HOSPISOFT",
+            "html": f"""
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #2563eb;">¡Bienvenido a HOSPISOFT!</h2>
+                    <p>Hola <strong>{nombre}</strong>,</p>
+                    <p>Su cuenta ha sido creada correctamente.</p>
+                    <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <p><strong>Credenciales de acceso:</strong></p>
+                        <p>Correo: <code>{destinatario}</code></p>
+                        <p>Contraseña: <code>{contraseña}</code></p>
+                    </div>
+                    <p style="color: #6b7280; font-size: 14px;">
+                        Le damos la bienvenida a nuestro sistema de atención.
+                    </p>
+                    <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
+                    <p style="color: #9ca3af; font-size: 12px;">Equipo HOSPISOFT</p>
+                </div>
+            """,
+            "text": f"""
 Hola {nombre},
 
-Su resultado de examen medico ha sido registrado con el documento ya se encuentra disponible en HOSPISOFT:
+Su cuenta ha sido creada correctamente.
 
-Datos del paciente:
+Credenciales de acceso:
+Correo: {destinatario}
+Contraseña: {contraseña}
 
-Nombre: {nombre}
-Documento: {documento}
-
-Adjuntamos su resultado en formato PDF:
+Le damos la bienvenida a nuestro sistema de atención.
 
 Saludos,
 Equipo HOSPISOFT
-"""
+            """
+        }
 
-        mensaje = MIMEMultipart()
+        response = resend.Emails.send(params)
         
-        mensaje['From'] = correo_emisor
-        mensaje['To'] = destinatario
-        mensaje['Subject'] = asunto
-        
-        mensaje.attach(
-            MIMEText(cuerpo, 'plain')
-        )
-        
-        # crear archivo adjunto
-        archivo_pdf = MIMEApplication(
-            pdf_bytes,
-            _subtype = "pdf"
-        )
-        
-        archivo_pdf.add_header(
-            "Content-Disposition",
-            "attachment",
-            filename=f"resultado_{documento}.pdf"
-        )
-        
-        mensaje.attach(archivo_pdf)
-        
-        # conectar con gmail
-        
-        server = SMTP_SSL("smtp.gmail.com", 465, timeout=10)
-        server.login(
-            correo_emisor, 
-            contraseña_emisor
-        )
-        
-        server.send_message(mensaje)
-        
-        server.quit()
-        
-        print("Correo con resultado enviado exitosamente")
-        
+        if response.get("id"):
+            logger.info(f"✅ Correo enviado a {destinatario} (id: {response['id']})")
+            return True
+        else:
+            logger.error(f"❌ Resend respondió sin ID: {response}")
+            return False
+
     except Exception as e:
-        print(f"Error enviando correo con resultado: {e}")
+        logger.error(f"⚠️ Error Resend enviando a {destinatario}: {e}")
+        return False
+
+
+def enviar_resultado_correo(destinatario: str, nombre: str, documento: str, pdf_base64: str) -> bool:
+    """
+    Envía resultado médico con PDF adjunto vía Resend.
+    """
+    if not RESEND_API_KEY:
+        logger.warning("RESEND_API_KEY no configurado, omitiendo envío de resultado")
+        return False
+
+    try:
+        import base64
         
-        raise
+        # Decodificar PDF
+        if isinstance(pdf_base64, str):
+            pdf_bytes = base64.b64decode(pdf_base64)
+        else:
+            pdf_bytes = pdf_base64
+
+        params = {
+            "from": f"HOSPISOFT Resultados <{FROM_EMAIL}>",
+            "to": [destinatario],
+            "subject": "Resultado de examen médico - HOSPISOFT",
+            "html": f"""
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #059669;">Resultado de Examen Médico</h2>
+                    <p>Hola <strong>{nombre}</strong>,</p>
+                    <p>Su resultado de examen médico (documento: <strong>{documento}</strong>) 
+                       ha sido registrado y se encuentra disponible.</p>
+                    <p>Adjuntamos su resultado en formato PDF.</p>
+                    <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
+                    <p style="color: #9ca3af; font-size: 12px;">Equipo HOSPISOFT</p>
+                </div>
+            """,
+            "text": f"Hola {nombre},\n\nSu resultado (doc: {documento}) está adjunto.\n\nSaludos,\nEquipo HOSPISOFT",
+            "attachments": [{
+                "filename": f"resultado_{documento}.pdf",
+                "content": base64.b64encode(pdf_bytes).decode("utf-8"),
+                "content_type": "application/pdf"
+            }]
+        }
+
+        response = resend.Emails.send(params)
+        
+        if response.get("id"):
+            logger.info(f"✅ Resultado enviado a {destinatario} (id: {response['id']})")
+            return True
+        else:
+            logger.error(f"❌ Resend respondió sin ID: {response}")
+            return False
+
+    except Exception as e:
+        logger.error(f"⚠️ Error Resend enviando resultado a {destinatario}: {e}")
+        return False

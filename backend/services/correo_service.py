@@ -1,4 +1,4 @@
-from smtplib import SMTP
+from smtplib import SMTP_SSL
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
@@ -39,7 +39,7 @@ def enviar_correo(destinatario, nombre, contraseña):
         
         mensaje.attach(MIMEText(cuerpo, 'plain'))
         
-        server = SMTP('smtp.gmail.com', 587)
+        server = SMTP_SSL('smtp.gmail.com', 465, timeout=10)
         server.starttls()
         server.login(correo_emisor, contraseña_emisor)
         

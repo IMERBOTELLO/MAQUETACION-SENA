@@ -81,7 +81,7 @@ document.addEventListener("click", function(event) {
 
         if (confirm("¿Está seguro de que desea eliminar este paciente?")) {
             
-            fetch("/pacientes/" + dataId, {
+            fetch("/paciente/" + dataId, {
 
                 method: "DELETE",
 

@@ -1,5 +1,9 @@
 const rol = localStorage.getItem("rol");
-const pagina = window.location.pathname;
+const pagina = window.location.pathname.replace(/\/$/, "");
+
+if (pagina === ""){
+    pagina = "/index";
+}
 
 
 

@@ -40,7 +40,6 @@ def enviar_correo(destinatario, nombre, contraseña):
         mensaje.attach(MIMEText(cuerpo, 'plain'))
         
         server = SMTP_SSL('smtp.gmail.com', 465, timeout=10)
-        server.starttls()
         server.login(correo_emisor, contraseña_emisor)
         
         server.send_message(mensaje)
@@ -129,10 +128,7 @@ Equipo HOSPISOFT
         
         # conectar con gmail
         
-        server = SMTP("smtp.gmail.com", 587)
-        
-        server.starttls()
-        
+        server = SMTP_SSL("smtp.gmail.com", 465, timeout=10)
         server.login(
             correo_emisor, 
             contraseña_emisor

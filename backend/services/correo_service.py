@@ -6,13 +6,23 @@ import logging
 logger = logging.getLogger(__name__)
 
 # Configuración desde variables de entorno
-MAILGUN_API_KEY = os.getenv("7543e985-83d05613")
-MAILGUN_DOMAIN = os.getenv("hospisoft.com")
-FROM_EMAIL = os.getenv("FROM_EMAIL", "hospsoft@gmail.com")
+BREVO_API_KEY = os.getenv("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")
+FROM_EMAIL = os.getenv("FROM_EMAIL", "hospisfot@gmail.com")
+FROM_NAME = os.getenv("FROM_NAME", "HOSPISOFT")
 
-async def enviar_correo(destinatario: str, nombre: str, contraseña: str) -> bool:
-    if not MAILGUN_API_KEY or not MAILGUN_DOMAIN:
-        logger.warning("MAILGUN_API_KEY o MAILGUN_DOMAIN no configurado, omitiendo envío")
+BREVO_API_URL = "https://api.brevo.com/v3/smtp/email"
+
+def _headers():
+    return {
+        "accept": "application/json",
+        "api-key": BREVO_API_KEY,
+        "content-type": "application/json"
+    }
+
+
+def enviar_correo(destinatario: str, nombre: str, contraseña: str) -> bool:
+    if not BREVO_API_KEY:
+        logger.warning("BREVO_API_KEY no configurado, omitiendo envío")
         return False
     
     try:

@@ -10,7 +10,7 @@ BREVO_API_URL = "https://api.brevo.com/v3/smtp/email"
 def _get_config():
     """Obtiene la configuracion en RUNTIME (no importar)"""
     return {
-        "api_key": os.getenv("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"),
+        "api_key": os.getenv("BREVO_API_KEY"),
         "from_email": os.getenv("FROM_EMAIL", "hospisfot@gmail.com"),
         "from_name": os.getenv("FROM_NAME", "HOSPISOFT")
     }
@@ -70,7 +70,7 @@ Equipo HOSPISOFT"""
         }
 
         with httpx.Client(timeout=10) as client:
-            resp = client.post(BREVO_API_URL, headers=_headers(), json=payload)
+            resp = client.post(BREVO_API_URL, headers=_headers(api_key), json=payload)
 
         if resp.status_code == 201:
             logger.info(f"✅ Correo enviado a {destinatario} (messageId: {resp.json().get('messageId')})")

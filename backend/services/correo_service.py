@@ -30,7 +30,7 @@ def enviar_correo(destinatario: str, nombre: str, contraseña: str) -> bool:
     from_name = config["from_name"]
     
     if not api_key:
-        logger.warning("BREVO_API_KEY no configurado, omitiendo envío")
+        logger.warning("API_KEY no configurado, omitiendo envío")
         return False
     
     try:
@@ -91,7 +91,7 @@ def enviar_resultado_correo(destinatario: str, nombre: str, documento: str, pdf_
     from_name = config["from_name"]
     
     if not api_key:
-        logger.warning("BREVO_API_KEY no configurado, omitiendo envío de resultado")
+        logger.warning("API_KEY no configurado, omitiendo envío de resultado")
         return False
 
     try:

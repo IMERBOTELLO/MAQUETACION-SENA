@@ -21,6 +21,13 @@ def _headers():
 
 
 def enviar_correo(destinatario: str, nombre: str, contraseña: str) -> bool:
+    # DEBUG - BORRA DESPUÉS
+    api_key = os.getenv('BREVO_API_KEY')
+    print(f"🔍 DEBUG BREVO_API_KEY: {'SÍ (' + api_key[:10] + '...)' if api_key else 'NO ESTÁ DEFINIDA'}")
+    print(f"🔍 DEBUG FROM_EMAIL: {os.getenv('FROM_EMAIL')}")
+    print(f"🔍 DEBUG FROM_NAME: {os.getenv('FROM_NAME')}")
+    # ... resto del código
+    
     if not BREVO_API_KEY:
         logger.warning("BREVO_API_KEY no configurado, omitiendo envío")
         return False

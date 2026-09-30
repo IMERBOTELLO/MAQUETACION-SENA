@@ -5,36 +5,37 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# Configuración desde variables de entorno
-BREVO_API_KEY = os.getenv("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")
-FROM_EMAIL = os.getenv("FROM_EMAIL", "hospisfot@gmail.com")
-FROM_NAME = os.getenv("FROM_NAME", "HOSPISOFT")
-
 BREVO_API_URL = "https://api.brevo.com/v3/smtp/email"
 
-def _headers():
+def _get_config():
+    """Obtiene la configuracion en RUNTIME (no importar)"""
+    return {
+        "api_key": os.getenv("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"),
+        "from_email": os.getenv("FROM_EMAIL", "hospisfot@gmail.com"),
+        "from_name": os.getenv("FROM_NAME", "HOSPISOFT")
+    }
+
+def _headers(api_key: str):
     return {
         "accept": "application/json",
-        "api-key": BREVO_API_KEY,
+        "api-key": api_key,
         "content-type": "application/json"
     }
 
 
 def enviar_correo(destinatario: str, nombre: str, contraseña: str) -> bool:
-    # DEBUG - BORRA DESPUÉS
-    api_key = os.getenv('BREVO_API_KEY')
-    print(f"🔍 DEBUG BREVO_API_KEY: {'SÍ (' + api_key[:10] + '...)' if api_key else 'NO ESTÁ DEFINIDA'}")
-    print(f"🔍 DEBUG FROM_EMAIL: {os.getenv('FROM_EMAIL')}")
-    print(f"🔍 DEBUG FROM_NAME: {os.getenv('FROM_NAME')}")
-    # ... resto del código
+    config = _get_config()
+    api_key = config["api_key"]
+    from_email = config["from_email"]
+    from_name = config["from_name"]
     
-    if not BREVO_API_KEY:
+    if not api_key:
         logger.warning("BREVO_API_KEY no configurado, omitiendo envío")
         return False
     
     try:
         payload = {
-            "sender": {"name": FROM_NAME, "email": FROM_EMAIL},
+            "sender": {"name": from_name, "email": from_email},
             "to": [{"email": destinatario, "name": nombre}],
             "subject": "Bienvenido a HOSPISOFT",
             "htmlContent": f"""
@@ -84,8 +85,12 @@ Equipo HOSPISOFT"""
 
 
 def enviar_resultado_correo(destinatario: str, nombre: str, documento: str, pdf_base64: str) -> bool:
-    """Envía resultado médico con PDF adjunto vía Brevo API."""
-    if not BREVO_API_KEY:
+    config = _get_config()
+    api_key = config["api_key"]
+    from_email = config["from_email"]
+    from_name = config["from_name"]
+    
+    if not api_key:
         logger.warning("BREVO_API_KEY no configurado, omitiendo envío de resultado")
         return False
 
@@ -100,7 +105,7 @@ def enviar_resultado_correo(destinatario: str, nombre: str, documento: str, pdf_
         pdf_b64 = base64.b64encode(pdf_bytes).decode("utf-8")
 
         payload = {
-            "sender": {"name": f"{FROM_NAME} Resultados", "email": FROM_EMAIL},
+            "sender": {"name": f"{from_name} Resultados", "email": from_email},
             "to": [{"email": destinatario, "name": nombre}],
             "subject": f"Resultado de examen médico - HOSPISOFT ({documento})",
             "htmlContent": f"""

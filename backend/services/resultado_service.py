@@ -167,7 +167,7 @@ def enviar_resultado_por_correo(db: Session, id_resultado: int):
         destinatario = paciente.correo,
         nombre = paciente.nombres_paciente,
         documento = paciente.numero_documento,
-        pdf = resultado.pdf
+        pdf_base64 = resultado.pdf
     )
     
     return {

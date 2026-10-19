@@ -163,13 +163,19 @@ def enviar_resultado_por_correo(db: Session, id_resultado: int):
             detail = "PDF no encontrado"
         )
         
-    enviar_resultado_correo(
-        destinatario = paciente.correo,
-        nombre = paciente.nombres_paciente,
-        documento = paciente.numero_documento,
-        pdf_base64 = resultado.pdf
-    )
-    
+    envio_exitoso = enviar_resultado_correo(
+    destinatario=paciente.correo,
+    nombre=paciente.nombres_paciente,
+    documento=paciente.numero_documento,
+    pdf_base64=resultado.pdf
+)
+
+    if not envio_exitoso:
+        raise HTTPException(
+            status_code=502,
+            detail="No fue posible enviar el correo con el resultado médico"
+        )
+
     return {
         "mensaje": "Correo enviado con resultado exitosamente",
         "correo": paciente.correo,

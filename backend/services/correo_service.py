@@ -126,7 +126,11 @@ def enviar_resultado_correo(destinatario: str, nombre: str, documento: str, pdf_
         }
 
         with httpx.Client(timeout=15) as client:
-            resp = client.post(BREVO_API_URL, headers=_headers(), json=payload)
+            resp = client.post(
+                BREVO_API_URL,
+                headers=_headers(api_key),
+                json=payload
+            )
 
         if resp.status_code == 201:
             logger.info(f"✅ Resultado enviado a {destinatario} (messageId: {resp.json().get('messageId')})")

@@ -495,23 +495,50 @@ function renderizarValidados() {
 
 function renderizarHistorialEntregas() {
     const tbody = document.getElementById('historialEntregas');
-    if(entregasRealizadas.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No hay entregas registradas</td></tr>';
+
+    // Verificar que el contenedor exista en el HTML
+    if (!tbody) {
+        console.error(
+            'No se encontró el elemento HTML con id="historialEntregas".'
+        );
         return;
     }
-    tbody.innerHTML = '';
-    entregasRealizadas.forEach(e => {
-        tbody.innerHTML += `
+
+    if (!Array.isArray(entregasRealizadas) || entregasRealizadas.length === 0) {
+        tbody.innerHTML = `
             <tr>
-                <td>${e.fecha}</td>
-                <td>${e.paciente}</td>
-                <td>${e.documento}</td>
-                <td>${e.formato}</td>
-                <td><span class="badge bg-success">${e.estado}</span></td>
-                <td><button class="btn btn-sm btn-info rounded-pill" onclick="imprimirYEliminar(${e.id}, '${e.paciente}', '${e.documento}')"><i class="bi bi-printer"></i> Imprimir</button></td>
+                <td colspan="6" class="text-center text-muted">
+                    No hay entregas registradas
+                </td>
             </tr>
         `;
-    });
+        return;
+    }
+
+    tbody.innerHTML = entregasRealizadas.map(e => `
+        <tr>
+            <td>${e.fecha ?? ''}</td>
+            <td>${e.paciente ?? ''}</td>
+            <td>${e.documento ?? ''}</td>
+            <td>${e.formato ?? ''}</td>
+            <td>
+                <span class="badge bg-success">
+                    ${e.estado ?? ''}
+                </span>
+            </td>
+            <td>
+                <button
+                    class="btn btn-sm btn-info rounded-pill"
+                    onclick="imprimirYEliminar(
+                        ${Number(e.id)},
+                        '${String(e.paciente ?? '').replace(/'/g, "\\'")}',
+                        '${String(e.documento ?? '').replace(/'/g, "\\'")}'
+                    )">
+                    <i class="bi bi-printer"></i> Imprimir
+                </button>
+            </td>
+        </tr>
+    `).join('');
 }
 
 function imprimirYEliminar(id, paciente, documento) {
